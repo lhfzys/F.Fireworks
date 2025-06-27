@@ -7,7 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\F.Fireworks.Shared\F.Fireworks.Shared.csproj" />
+        <ProjectReference Include="..\F.Fireworks.Shared\F.Fireworks.Shared.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="9.0.6"/>
     </ItemGroup>
 
 </Project>
