@@ -1,8 +1,10 @@
 using System.Text;
+using F.Fireworks.Infrastructure.Auth;
 using F.Fireworks.Infrastructure.Options;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using NSwag;
 using OpenApiSecurityScheme = NSwag.OpenApiSecurityScheme;
@@ -37,11 +39,8 @@ public static class ServiceCollectionExtensions
                 };
             });
 
-        // 在这里可以链式添加所有授权策略
-        services.AddAuthorizationBuilder()
-            .AddPolicy("RequireAdmin", policy => policy.RequireRole("Admin"));
-        // .AddPolicy("AnotherPolicy", policy => ...);
-
+        services.AddAuthorization();
+        services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
         return services;
     }
 
