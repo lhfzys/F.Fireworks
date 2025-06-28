@@ -1,8 +1,12 @@
 ﻿using F.Fireworks.Application.Contracts.Identity;
 using F.Fireworks.Application.Contracts.Persistence;
+using F.Fireworks.Application.Contracts.Services;
 using F.Fireworks.Domain.Identity;
 using F.Fireworks.Infrastructure.Identity;
 using F.Fireworks.Infrastructure.Persistence;
+using F.Fireworks.Infrastructure.Services;
+using Hangfire;
+using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +23,6 @@ public static class DependencyInjection
             options.UseNpgsql(configuration.GetConnectionString("PostgresSqlConnection"),
                 b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
-        // ... 其他基础设施服务的注册稍后会加在这里
         services.AddIdentityCore<ApplicationUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
@@ -35,6 +38,22 @@ public static class DependencyInjection
             .AddDefaultTokenProviders();
         services.AddScoped<ITokenService, JwtService>();
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<ILoginLogService, LoginLogService>();
+        services.AddScoped<IClientIpService, ClientIpService>();
+        services.AddScoped<IGeoIpService, GeoIpService>();
+        services.AddScoped<IAuditLogPersister, AuditLogPersister>();
+        services.AddScoped<IAuditService, AuditService>();
+        services.AddScoped<IDataSanitizer, DataSanitizer>();
+
+        services.AddHangfire(config => config
+            .UsePostgreSqlStorage(c =>
+                c.UseNpgsqlConnection(configuration.GetConnectionString("PostgresSqlConnection")))
+            .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseRecommendedSerializerSettings());
+
+        services.AddHangfireServer(options => { options.WorkerCount = Environment.ProcessorCount * 2; });
         return services;
     }
 }

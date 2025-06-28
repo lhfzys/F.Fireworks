@@ -7,22 +7,26 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\F.Fireworks.Application\F.Fireworks.Application.csproj" />
+        <ProjectReference Include="..\F.Fireworks.Application\F.Fireworks.Application.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="EFCore.BulkExtensions" Version="9.0.1" />
-      <PackageReference Include="Hangfire" Version="1.8.20" />
-      <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.6" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
-      <PackageReference Include="Scrutor" Version="6.1.0" />
-      <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
-      <PackageReference Include="StackExchange.Redis.Extensions.AspNetCore" Version="11.0.0" />
+        <PackageReference Include="EFCore.BulkExtensions" Version="9.0.1"/>
+        <PackageReference Include="Hangfire" Version="1.8.20"/>
+        <PackageReference Include="Hangfire.PostgreSql" Version="1.20.12"/>
+        <PackageReference Include="IPTools.China" Version="1.6.0"/>
+        <PackageReference Include="IPTools.Core" Version="1.6.0"/>
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.6"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4"/>
+        <PackageReference Include="Scrutor" Version="6.1.0"/>
+        <PackageReference Include="Serilog.AspNetCore" Version="9.0.0"/>
+        <PackageReference Include="StackExchange.Redis.Extensions.AspNetCore" Version="11.0.0"/>
+        <PackageReference Include="UAParser" Version="3.1.47"/>
     </ItemGroup>
 
 </Project>
