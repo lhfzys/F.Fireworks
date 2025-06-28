@@ -12,6 +12,8 @@ public class LoginEndpoint(IMediator mediator) : Endpoint<LoginDto.LoginCommand,
     {
         Post("auth/login");
         AllowAnonymous();
+        Description(x => x.WithTags("Auth"));
+        Summary(s => s.Summary = "用户登录");
     }
 
     public override async Task HandleAsync(LoginDto.LoginCommand req, CancellationToken ct)

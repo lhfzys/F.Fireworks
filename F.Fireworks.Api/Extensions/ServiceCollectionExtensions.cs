@@ -74,7 +74,7 @@ public static class ServiceCollectionExtensions
                     Description = "输入 'Bearer {token}'"
                 });
             };
-            o.AutoTagPathSegmentIndex = 2;
+            o.AutoTagPathSegmentIndex = 0;
         });
         return services;
     }

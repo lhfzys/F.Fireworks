@@ -11,6 +11,8 @@ public class RefreshTokenEndpoint(IMediator mediator) : Endpoint<RefreshTokenCom
     {
         Post("auth/refresh");
         AllowAnonymous();
+        Description(x => x.WithTags("Auth"));
+        Summary(s => s.Summary = "刷新令牌");
     }
 
     public override async Task HandleAsync(RefreshTokenCommand req, CancellationToken ct)

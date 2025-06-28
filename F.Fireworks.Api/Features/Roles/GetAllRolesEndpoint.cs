@@ -1,33 +1,27 @@
 ﻿using F.Fireworks.Api.Extensions;
-using F.Fireworks.Application.Features.Permissions.Queries;
+using F.Fireworks.Application.Features.Roles.Queries;
 using F.Fireworks.Domain.Permissions;
 using F.Fireworks.Infrastructure.Auth;
 using FastEndpoints;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace F.Fireworks.Api.Features.Permissions;
+namespace F.Fireworks.Api.Features.Roles;
 
-public class GetAllEndpoint(IMediator mediator) : EndpointWithoutRequest<IResult>
+public class GetAllRolesEndpoint(IMediator mediator) : EndpointWithoutRequest<IResult>
 {
     public override void Configure()
     {
-        Get("permissions");
-
+        Get("roles");
         AuthSchemes(JwtBearerDefaults.AuthenticationScheme);
         Policy(b => b.AddRequirements(new PermissionRequirement(PermissionDefinitions.RolesRead)));
-
-        Description(x => x.WithTags("Permissions"));
-        Summary(s =>
-        {
-            s.Summary = "获取所有权限的树状列表";
-            s.Description = "用于后台管理界面的权限树展示。";
-        });
+        Description(x => x.WithTags("Roles"));
+        Summary(s => s.Summary = "获取所有角色列表");
     }
 
     public override async Task HandleAsync(CancellationToken ct)
     {
-        var result = await mediator.Send(new GetAllPermissionsQuery(), ct);
+        var result = await mediator.Send(new GetAllRolesQuery(), ct);
         await SendAsync(result.ToMinimalApiResult(), cancellation: ct);
     }
 }

@@ -11,6 +11,8 @@ public class LogoutEndpoint(IMediator mediator) : Endpoint<LogoutCommand, IResul
     {
         Post("auth/logout");
         AllowAnonymous();
+        Description(x => x.WithTags("Auth"));
+        Summary(s => s.Summary = "用户登出");
     }
 
     public override async Task HandleAsync(LogoutCommand req, CancellationToken ct)

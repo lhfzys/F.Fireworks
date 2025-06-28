@@ -11,6 +11,8 @@ public class RegisterEndpoint(IMediator mediator) : Endpoint<RegisterUserCommand
     {
         Post("auth/register");
         AllowAnonymous();
+        Description(x => x.WithTags("Auth"));
+        Summary(s => s.Summary = "用户注册");
     }
 
     public override async Task HandleAsync(RegisterUserCommand req, CancellationToken ct)
