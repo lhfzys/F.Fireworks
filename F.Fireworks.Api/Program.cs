@@ -25,4 +25,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseFastEndpoints(c => { c.Endpoints.RoutePrefix = "api"; });
+await app.SeedDataAsync();
 app.Run();
