@@ -13,7 +13,7 @@ public class LoginLogService(
     IHttpContextAccessor httpContextAccessor)
     : ILoginLogService
 {
-    public async Task LogAsync(Guid userId, Guid tenantId, string email, bool wasSuccessful, string? failureReason,
+    public async Task LogAsync(Guid? userId, Guid? tenantId, string email, bool wasSuccessful, string? failureReason,
         CancellationToken cancellationToken = default)
     {
         var ipAddress = ipService.GetClientIp();

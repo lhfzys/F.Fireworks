@@ -25,6 +25,9 @@ public static class PermissionDefinitions
     [Permission("删除用户", PermissionType.Button, 4, parentCode: Users)]
     public const string UsersDelete = "System.Users.Delete";
 
+    [Permission("分配角色", PermissionType.Button, 5, parentCode: Users)]
+    public const string UsersUpdateRoles = "System.Users.UpdateRoles";
+
     // 角色管理
     [Permission("角色管理", PermissionType.Menu, 2, "/system/roles", System)]
     public const string Roles = "System.Roles";

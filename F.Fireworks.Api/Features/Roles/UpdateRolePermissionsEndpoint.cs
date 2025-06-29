@@ -8,19 +8,18 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace F.Fireworks.Api.Features.Roles;
 
-public class CreateRoleEndpoint(IMediator mediator) : Endpoint<CreateRoleCommand, IResult>
+public class UpdateRolePermissionsEndpoint(IMediator mediator) : Endpoint<UpdateRolePermissionsCommand, IResult>
 {
     public override void Configure()
     {
-        Post("roles");
-        AuthSchemes(JwtBearerDefaults.AuthenticationScheme);
-        Policy(b => b.AddRequirements(new PermissionRequirement(PermissionDefinitions.RolesCreate)));
-        Tags("Roles");
+        Put("roles/{RoleId}/permissions");
         Description(x => x.WithTags("Roles"));
-        Summary(s => s.Summary = "创建一个新角色");
+        AuthSchemes(JwtBearerDefaults.AuthenticationScheme);
+        Policy(b => b.AddRequirements(new PermissionRequirement(PermissionDefinitions.RolesUpdate)));
+        Summary(s => s.Summary = "更新指定角色的权限");
     }
 
-    public override async Task HandleAsync(CreateRoleCommand req, CancellationToken ct)
+    public override async Task HandleAsync(UpdateRolePermissionsCommand req, CancellationToken ct)
     {
         var result = await mediator.Send(req, ct);
         await SendAsync(result.ToMinimalApiResult(), cancellation: ct);

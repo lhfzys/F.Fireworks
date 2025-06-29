@@ -25,7 +25,7 @@ public class LoginCommandHandler(
         var user = await userManager.FindByNameAsync(request.UserName);
         if (user is null || !await userManager.CheckPasswordAsync(user, request.Password))
         {
-            await loginLogService.LogAsync(user?.Id ?? Guid.Empty, user?.TenantId ?? Guid.Empty, request.UserName,
+            await loginLogService.LogAsync(user?.Id, user?.TenantId, request.UserName,
                 false, "用户名或密码错误",
                 cancellationToken);
             await context.SaveChangesAsync(cancellationToken);

@@ -16,6 +16,8 @@ public interface IApplicationDbContext
     DbSet<UserLoginLog> UserLoginLogs { get; }
     DbSet<ApplicationRolePermission> RolePermissions { get; }
     DbSet<IdentityUserRole<Guid>> UserRoles { get; }
+    DbSet<ApplicationUser> Users { get; }
+    DbSet<ApplicationRole> Roles { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }
