@@ -156,6 +156,8 @@ namespace F.Fireworks.Infrastructure.Persistence.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
+                    b.HasIndex("TenantId");
+
                     b.ToTable("Users", (string)null);
                 });
 
@@ -175,6 +177,9 @@ namespace F.Fireworks.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("Expires")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Jti")
+                        .HasColumnType("text");
+
                     b.Property<string>("ReplacedByToken")
                         .HasColumnType("text");
 
@@ -186,6 +191,9 @@ namespace F.Fireworks.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Token")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserAgent")
                         .HasColumnType("text");
 
                     b.Property<Guid>("UserId")
@@ -494,6 +502,17 @@ namespace F.Fireworks.Infrastructure.Persistence.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("F.Fireworks.Domain.Identity.ApplicationUser", b =>
+                {
+                    b.HasOne("F.Fireworks.Domain.Tenants.Tenant", "Tenant")
+                        .WithMany("Users")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
             modelBuilder.Entity("F.Fireworks.Domain.Identity.RefreshToken", b =>
                 {
                     b.HasOne("F.Fireworks.Domain.Identity.ApplicationUser", "User")
@@ -609,6 +628,11 @@ namespace F.Fireworks.Infrastructure.Persistence.Migrations
                     b.Navigation("Children");
 
                     b.Navigation("Roles");
+                });
+
+            modelBuilder.Entity("F.Fireworks.Domain.Tenants.Tenant", b =>
+                {
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,4 +1,5 @@
 using F.Fireworks.Domain.Common;
+using F.Fireworks.Domain.Identity;
 using F.Fireworks.Shared.Enums;
 
 namespace F.Fireworks.Domain.Tenants;
@@ -13,6 +14,8 @@ public class Tenant : IEntity<Guid>, IAuditable
     ///     存储特定于租户类型的自定义属性 (JSON格式)
     /// </summary>
     public string? Attributes { get; set; }
+
+    public virtual ICollection<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
 
     // --- 审计字段 ---
     public Guid? CreatedBy { get; set; }

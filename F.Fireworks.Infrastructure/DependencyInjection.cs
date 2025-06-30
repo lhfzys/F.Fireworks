@@ -42,6 +42,8 @@ public static class DependencyInjection
         services.AddScoped<ILoginLogService, LoginLogService>();
         services.AddScoped<IClientIpService, ClientIpService>();
         services.AddScoped<IGeoIpService, GeoIpService>();
+        services.AddScoped<IUserAgentParserService, UserAgentParserService>();
+        services.AddScoped<IPermissionService, PermissionService>();
         services.AddScoped<IAuditLogPersister, AuditLogPersister>();
         services.AddScoped<IAuditService, AuditService>();
         services.AddScoped<IDataSanitizer, DataSanitizer>();

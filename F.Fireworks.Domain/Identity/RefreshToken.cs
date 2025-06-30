@@ -8,6 +8,9 @@ public class RefreshToken : IEntity<Guid>
     public DateTime Expires { get; set; }
     public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
     public string CreatedByIp { get; set; } = null!;
+
+    public string? UserAgent { get; set; }
+    public string? Jti { get; set; }
     public DateTime? RevokedOn { get; set; }
     public string? ReplacedByToken { get; set; }
 

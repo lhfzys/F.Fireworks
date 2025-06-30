@@ -18,4 +18,26 @@ public class CurrentUserService(IHttpContextAccessor httpContextAccessor) : ICur
             : null;
 
     public string? UserName => httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Name);
+
+    public string? GetClaim(string claimType)
+    {
+        return httpContextAccessor.HttpContext?.User?.FindFirstValue(claimType);
+    }
+
+    public string? GetIpAddress()
+    {
+        var httpContext = httpContextAccessor.HttpContext;
+        if (httpContext == null) return null;
+
+        var forwardedFor = httpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+        if (!string.IsNullOrWhiteSpace(forwardedFor))
+            return forwardedFor.Split(',', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+
+        return httpContext.Connection.RemoteIpAddress?.ToString();
+    }
+
+    public string? GetUserAgent()
+    {
+        return httpContextAccessor.HttpContext?.Request.Headers.UserAgent.ToString();
+    }
 }

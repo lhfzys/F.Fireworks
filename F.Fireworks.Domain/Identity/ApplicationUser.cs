@@ -1,4 +1,6 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using F.Fireworks.Domain.Common;
+using F.Fireworks.Domain.Tenants;
 using F.Fireworks.Shared.Enums;
 using Microsoft.AspNetCore.Identity;
 
@@ -18,6 +20,8 @@ public class ApplicationUser : IdentityUser<Guid>, IAuditable, ISoftDeletable
 
     // --- 导航属性 ---
     public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+
+    [ForeignKey(nameof(TenantId))] public virtual Tenant Tenant { get; set; } = null!;
 
     // --- 审计字段 ---
     public Guid? CreatedBy { get; set; }

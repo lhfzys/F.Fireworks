@@ -45,7 +45,7 @@ public static class PermissionDefinitions
     public const string RolesDelete = "System.Roles.Delete";
 
     // 权限管理
-    [Permission("权限管理", PermissionType.Menu, 1, parentCode: System)]
+    [Permission("权限管理", PermissionType.Menu, 1, "/system/permissions", System)]
     public const string Permissions = "System.Permissions";
 
     [Permission("查看权限", PermissionType.Button, 1, parentCode: Permissions)]

@@ -1,5 +1,6 @@
 ﻿using F.Fireworks.Domain.Identity;
 using F.Fireworks.Domain.Permissions;
+using F.Fireworks.Domain.Tenants;
 using F.Fireworks.Shared.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,21 @@ public class SuperAdminSeeder(
     {
         const string adminRoleName = "SuperAdmin";
         const string adminUserName = "superadmin";
+        const string systemTenantName = "System";
+
+        var systemTenant = await context.Tenants.FirstOrDefaultAsync(t => t.Name == systemTenantName);
+        if (systemTenant is null)
+        {
+            systemTenant = new Tenant
+            {
+                Id = Guid.NewGuid(),
+                Name = systemTenantName,
+                Type = TenantType.System,
+                IsActive = true
+            };
+            await context.Tenants.AddAsync(systemTenant);
+            await context.SaveChangesAsync();
+        }
 
         // 1. 植入 SuperAdmin 角色
         if (await roleManager.FindByNameAsync(adminRoleName) is not { } adminRole)
@@ -54,7 +70,7 @@ public class SuperAdminSeeder(
                 Email = "superadmin@yourproject.com",
                 EmailConfirmed = true,
                 Status = UserStatus.Active,
-                TenantId = Guid.Empty // 系统级用户
+                TenantId = systemTenant.Id
             };
             var result = await userManager.CreateAsync(adminUser, "123456");
             if (result.Succeeded) await userManager.AddToRoleAsync(adminUser, adminRoleName);

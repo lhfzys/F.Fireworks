@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 using Ardalis.Result;
 using F.Fireworks.Application.Contracts.Identity;
@@ -16,6 +17,7 @@ public class LoginCommandHandler(
     ITokenService tokenService,
     ILoginLogService loginLogService,
     IClientIpService clientIpService,
+    ICurrentUserService currentUserService,
     IApplicationDbContext context)
     : IRequestHandler<LoginDto.LoginCommand, Result<LoginDto.LoginResponse>>
 {
@@ -44,6 +46,11 @@ public class LoginCommandHandler(
 
         var roles = await userManager.GetRolesAsync(user);
         var accessToken = tokenService.CreateToken(user, roles);
+
+        var handler = new JwtSecurityTokenHandler();
+        var jwtToken = handler.ReadJwtToken(accessToken);
+        var jti = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
+
         var refreshTokenString = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
         var refreshToken = new RefreshToken
         {
@@ -52,7 +59,9 @@ public class LoginCommandHandler(
             TenantId = user.TenantId,
             Token = refreshTokenString,
             Expires = DateTime.UtcNow.AddDays(30),
-            CreatedByIp = clientIpService.GetClientIp()
+            CreatedByIp = clientIpService.GetClientIp(),
+            UserAgent = currentUserService.GetUserAgent(),
+            Jti = jti
         };
         await context.RefreshTokens.AddAsync(refreshToken, cancellationToken);
         var response = new LoginDto.LoginResponse(accessToken, refreshToken.Token);
