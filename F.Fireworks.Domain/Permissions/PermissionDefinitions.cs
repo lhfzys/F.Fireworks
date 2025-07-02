@@ -66,4 +66,13 @@ public static class PermissionDefinitions
 
     [Permission("删除租户", PermissionType.Button, 4, parentCode: Tenants)]
     public const string TenantsDelete = "System.Tenants.Delete";
+
+    [Permission("会话管理", PermissionType.Menu, 5, "/system/sessions", System)]
+    public const string Sessions = "System.Sessions";
+
+    [Permission("查看会话", PermissionType.Button, 1, parentCode: Sessions)]
+    public const string SessionsRead = "System.Sessions.Read";
+
+    [Permission("强制下线", PermissionType.Button, 2, parentCode: Sessions)]
+    public const string SessionsRevoke = "System.Sessions.Revoke";
 }
