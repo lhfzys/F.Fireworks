@@ -1,10 +1,13 @@
 using System.Text;
+using System.Threading.RateLimiting;
 using F.Fireworks.Infrastructure.Auth;
 using F.Fireworks.Infrastructure.Options;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using NSwag;
 using OpenApiSecurityScheme = NSwag.OpenApiSecurityScheme;
@@ -13,6 +16,8 @@ namespace F.Fireworks.Api.Extensions;
 
 public static class ServiceCollectionExtensions
 {
+    private const string DefaultCorsPolicyName = "DefaultCorsPolicy";
+
     public static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
     {
         var jwtSettings = new JwtSettings();
@@ -53,7 +58,7 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddApiServices(this IServiceCollection services)
+    public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddFastEndpoints();
         services.AddEndpointsApiExplorer();
@@ -76,6 +81,12 @@ public static class ServiceCollectionExtensions
             };
             o.AutoTagPathSegmentIndex = 0;
         });
+        services.AddHealthChecks()
+            .AddNpgSql(
+                configuration.GetConnectionString("PostgresSqlConnection") ?? string.Empty,
+                name: "PostgreSQL Database",
+                failureStatus: HealthStatus.Unhealthy, // 当检查失败时报告的状态
+                tags: ["database", "critical"]);
         return services;
     }
 
@@ -90,5 +101,62 @@ public static class ServiceCollectionExtensions
         //     c.DisplayRequestDuration();
         // });
         return app;
+    }
+
+    public static IServiceCollection AddCorsPolicy(this IServiceCollection services, IConfiguration configuration)
+    {
+        var corsSettings = configuration.GetSection("CorsSettings");
+        var allowedOrigins = corsSettings.GetValue<string>("AllowedOrigins")?.Split(',') ?? [];
+        services.AddCors(options =>
+        {
+            options.AddPolicy(DefaultCorsPolicyName, policy =>
+            {
+                policy
+                    .WithOrigins(allowedOrigins)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials();
+            });
+        });
+        return services;
+    }
+
+
+    public static IServiceCollection AddRateLimiting(this IServiceCollection services)
+    {
+        services.AddRateLimiter(options =>
+        {
+            options.AddFixedWindowLimiter("fixed", o =>
+            {
+                o.PermitLimit = 10;
+                o.Window = TimeSpan.FromSeconds(10);
+                o.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                o.QueueLimit = 2;
+            });
+            options.AddSlidingWindowLimiter("sliding", o =>
+            {
+                o.PermitLimit = 15;
+                o.Window = TimeSpan.FromSeconds(10);
+                o.SegmentsPerWindow = 5;
+                o.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                o.QueueLimit = 2;
+            });
+            options.AddTokenBucketLimiter("token", o =>
+            {
+                o.TokenLimit = 20;
+                o.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                o.QueueLimit = 1;
+                o.TokensPerPeriod = 10;
+                o.ReplenishmentPeriod = TimeSpan.FromMinutes(1);
+            });
+            options.OnRejected = (context, cancellationToken) =>
+            {
+                context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+                context.HttpContext.Response.WriteAsync("Too many requests. Please try again later.",
+                    cancellationToken);
+                return new ValueTask();
+            };
+        });
+        return services;
     }
 }

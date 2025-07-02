@@ -13,6 +13,7 @@ public class LoginEndpoint(IMediator mediator) : Endpoint<LoginDto.LoginCommand,
         Post("auth/login");
         AllowAnonymous();
         Description(x => x.WithTags("Auth"));
+        Options(x => x.RequireRateLimiting("token"));
         Summary(s => s.Summary = "用户登录");
     }
 
