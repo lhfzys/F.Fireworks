@@ -5,4 +5,5 @@ namespace F.Fireworks.Application.Features.Authentication.Commands;
 
 public record RegisterUserCommand(
     string UserName,
-    string Password) : IRequest<Result<Guid>>;
+    string Password,
+    string TenantName) : IRequest<Result<Guid>>;
