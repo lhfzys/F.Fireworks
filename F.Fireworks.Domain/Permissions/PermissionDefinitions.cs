@@ -45,9 +45,25 @@ public static class PermissionDefinitions
     public const string RolesDelete = "System.Roles.Delete";
 
     // 权限管理
-    [Permission("权限管理", PermissionType.Menu, 1, "/system/permissions", System)]
+    [Permission("权限管理", PermissionType.Menu, 3, "/system/permissions", System)]
     public const string Permissions = "System.Permissions";
 
     [Permission("查看权限", PermissionType.Button, 1, parentCode: Permissions)]
     public const string PermissionsRead = "System.Permissions.Read";
+
+    // 租户管理
+    [Permission("租户管理", PermissionType.Menu, 4, "/system/tenants", System)]
+    public const string Tenants = "System.Tenants";
+
+    [Permission("查看租户", PermissionType.Button, 1, parentCode: Tenants)]
+    public const string TenantsRead = "System.Tenants.Read";
+
+    [Permission("创建租户", PermissionType.Button, 2, parentCode: Tenants)]
+    public const string TenantsCreate = "System.Tenants.Create";
+
+    [Permission("编辑租户", PermissionType.Button, 3, parentCode: Tenants)]
+    public const string TenantsUpdate = "System.Tenants.Update";
+
+    [Permission("删除租户", PermissionType.Button, 4, parentCode: Tenants)]
+    public const string TenantsDelete = "System.Tenants.Delete";
 }
