@@ -108,4 +108,18 @@ public static class PermissionDefinitions
 
     [Permission("删除专题", PermissionType.Button, 4, parentCode: LibraryTopics)]
     public const string LibraryTopicsDelete = "Library.Topics.Delete";
+
+    public const string LibraryLessons = "Library.Lessons";
+
+    [Permission("查看课节", PermissionType.Button, 1, parentCode: LibraryTopics)]
+    public const string LibraryLessonsRead = "Library.Lessons.Read";
+
+    [Permission("创建课节", PermissionType.Button, 2, parentCode: LibraryTopics)]
+    public const string LibraryLessonsCreate = "Library.Lessons.Create";
+
+    [Permission("编辑课节", PermissionType.Button, 3, parentCode: LibraryTopics)]
+    public const string LibraryLessonsUpdate = "Library.Lessons.Update";
+
+    [Permission("删除课节", PermissionType.Button, 4, parentCode: LibraryTopics)]
+    public const string LibraryLessonsDelete = "Library.Lessons.Delete";
 }
