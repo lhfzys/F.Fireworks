@@ -75,4 +75,22 @@ public static class PermissionDefinitions
 
     [Permission("强制下线", PermissionType.Button, 2, parentCode: Sessions)]
     public const string SessionsRevoke = "System.Sessions.Revoke";
+
+    [Permission("内容库管理", PermissionType.Directory, 200, "/library")]
+    public const string Library = "Library";
+
+    [Permission("年级管理", PermissionType.Menu, 1, "/library/grades", Library)]
+    public const string LibraryGrades = "Library.Grades";
+
+    [Permission("查看年级", PermissionType.Button, 1, parentCode: LibraryGrades)]
+    public const string LibraryGradesRead = "Library.Grades.Read";
+
+    [Permission("创建年级", PermissionType.Button, 2, parentCode: LibraryGrades)]
+    public const string LibraryGradesCreate = "Library.Grades.Create";
+
+    [Permission("编辑年级", PermissionType.Button, 3, parentCode: LibraryGrades)]
+    public const string LibraryGradesUpdate = "Library.Grades.Update";
+
+    [Permission("删除年级", PermissionType.Button, 4, parentCode: LibraryGrades)]
+    public const string LibraryGradesDelete = "Library.Grades.Delete";
 }

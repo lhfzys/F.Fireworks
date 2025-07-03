@@ -1,6 +1,7 @@
 using F.Fireworks.Application.Contracts.Persistence;
 using F.Fireworks.Application.Contracts.Services;
 using F.Fireworks.Domain.Common;
+using F.Fireworks.Domain.Courses;
 using F.Fireworks.Domain.Identity;
 using F.Fireworks.Domain.Logging;
 using F.Fireworks.Domain.Permissions;
@@ -31,6 +32,10 @@ public class ApplicationDbContext(
     // --- 连接实体 ---
     // 这个实体用于配置多对多关系，EF Core 会自动处理
     public DbSet<ApplicationRolePermission> RolePermissions => Set<ApplicationRolePermission>();
+
+    public DbSet<Grade> Grades => Set<Grade>();
+    public DbSet<LibraryLesson> LibraryLessons => Set<LibraryLesson>();
+    public DbSet<LibraryTopic> LibraryTopics => Set<LibraryTopic>();
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

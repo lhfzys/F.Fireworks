@@ -1,3 +1,4 @@
+using F.Fireworks.Domain.Courses;
 using F.Fireworks.Domain.Identity;
 using F.Fireworks.Domain.Logging;
 using F.Fireworks.Domain.Permissions;
@@ -18,6 +19,10 @@ public interface IApplicationDbContext
     DbSet<IdentityUserRole<Guid>> UserRoles { get; }
     DbSet<ApplicationUser> Users { get; }
     DbSet<ApplicationRole> Roles { get; }
+    DbSet<Grade> Grades { get; }
+
+    DbSet<LibraryTopic> LibraryTopics { get; }
+    DbSet<LibraryLesson> LibraryLessons { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }
