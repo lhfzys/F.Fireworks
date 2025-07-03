@@ -93,4 +93,19 @@ public static class PermissionDefinitions
 
     [Permission("删除年级", PermissionType.Button, 4, parentCode: LibraryGrades)]
     public const string LibraryGradesDelete = "Library.Grades.Delete";
+
+    [Permission("专题管理", PermissionType.Menu, 2, "/library/topics", Library)]
+    public const string LibraryTopics = "Library.Topics";
+
+    [Permission("查看专题", PermissionType.Button, 1, parentCode: LibraryTopics)]
+    public const string LibraryTopicsRead = "Library.Topics.Read";
+
+    [Permission("创建专题", PermissionType.Button, 2, parentCode: LibraryTopics)]
+    public const string LibraryTopicsCreate = "Library.Topics.Create";
+
+    [Permission("编辑专题", PermissionType.Button, 3, parentCode: LibraryTopics)]
+    public const string LibraryTopicsUpdate = "Library.Topics.Update";
+
+    [Permission("删除专题", PermissionType.Button, 4, parentCode: LibraryTopics)]
+    public const string LibraryTopicsDelete = "Library.Topics.Delete";
 }
