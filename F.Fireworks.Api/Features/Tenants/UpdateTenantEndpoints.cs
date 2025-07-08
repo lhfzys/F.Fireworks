@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace F.Fireworks.Api.Features.Tenants;
 
-public class UpdateTenantEndpoints(IMediator mediator) : Endpoint<UpdateTenantCommand, IResult>
+public class UpdateTenantEndpoints(IMediator mediator) : Endpoint<UpdateTenantCommand>
 {
     public override void Configure()
     {
@@ -22,6 +22,6 @@ public class UpdateTenantEndpoints(IMediator mediator) : Endpoint<UpdateTenantCo
     public override async Task HandleAsync(UpdateTenantCommand req, CancellationToken ct)
     {
         var result = await mediator.Send(req, ct);
-        await SendAsync(result.ToMinimalApiResult(), cancellation: ct);
+        await this.SendMyResultAsync(result, ct);
     }
 }

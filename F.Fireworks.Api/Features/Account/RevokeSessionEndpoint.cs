@@ -3,19 +3,11 @@ using F.Fireworks.Application.Features.Authentication.Commands;
 using FastEndpoints;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace F.Fireworks.Api.Features.Account;
 
-public class RevokeSessionEndpoint : Endpoint<RevokeSessionCommand, IResult>
+public class RevokeSessionEndpoint(IMediator mediator) : Endpoint<RevokeSessionCommand>
 {
-    private readonly IMediator _mediator;
-
-    public RevokeSessionEndpoint(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     public override void Configure()
     {
         Delete("account/sessions/{SessionId}");
@@ -31,8 +23,7 @@ public class RevokeSessionEndpoint : Endpoint<RevokeSessionCommand, IResult>
 
     public override async Task HandleAsync(RevokeSessionCommand req, CancellationToken ct)
     {
-        var result = await _mediator.Send(req, ct);
-
-        await SendAsync(result.ToMinimalApiResult(), cancellation: ct);
+        var result = await mediator.Send(req, ct);
+        await this.SendMyResultAsync(result, ct);
     }
 }

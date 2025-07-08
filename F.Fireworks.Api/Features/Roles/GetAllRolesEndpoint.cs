@@ -22,6 +22,6 @@ public class GetAllRolesEndpoint(IMediator mediator) : EndpointWithoutRequest<IR
     public override async Task HandleAsync(CancellationToken ct)
     {
         var result = await mediator.Send(new GetAllRolesQuery(), ct);
-        await SendAsync(result.ToMinimalApiResult(), cancellation: ct);
+        await this.SendMyResultAsync(result, ct);
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace F.Fireworks.Api.Features.Library.Grades;
 
-public class DeleteTopicEndpoint(IMediator mediator) : Endpoint<DeleteTopicCommand, IResult>
+public class DeleteTopicEndpoint(IMediator mediator) : Endpoint<DeleteTopicCommand>
 {
     public override void Configure()
     {
@@ -22,6 +22,6 @@ public class DeleteTopicEndpoint(IMediator mediator) : Endpoint<DeleteTopicComma
     public override async Task HandleAsync(DeleteTopicCommand req, CancellationToken ct)
     {
         var result = await mediator.Send(req, ct);
-        await SendAsync(result.ToMinimalApiResult(), cancellation: ct);
+        await this.SendMyResultAsync(result, ct);
     }
 }

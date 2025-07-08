@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace F.Fireworks.Api.Features.Library.libraryTopics;
 
-public class CreateTopicEndpoint(IMediator mediator) : Endpoint<CreateTopicCommand, IResult>
+public class CreateTopicEndpoint(IMediator mediator) : Endpoint<CreateTopicCommand>
 {
     public override void Configure()
     {
@@ -22,6 +22,6 @@ public class CreateTopicEndpoint(IMediator mediator) : Endpoint<CreateTopicComma
     public override async Task HandleAsync(CreateTopicCommand req, CancellationToken ct)
     {
         var result = await mediator.Send(req, ct);
-        await SendAsync(result.ToMinimalApiResult(), cancellation: ct);
+        await this.SendMyResultAsync(result, ct);
     }
 }

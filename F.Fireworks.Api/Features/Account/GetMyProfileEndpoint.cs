@@ -10,7 +10,7 @@ public class GetMyProfileEndpoint(IMediator mediator) : EndpointWithoutRequest<I
 {
     public override void Configure()
     {
-        Get("/api/me/profile");
+        Get("me/profile");
         Description(x => x.WithTags("Account"));
         AuthSchemes(JwtBearerDefaults.AuthenticationScheme);
         Summary(s => s.Summary = "获取当前用户的完整信息（含权限和菜单）");
@@ -19,6 +19,7 @@ public class GetMyProfileEndpoint(IMediator mediator) : EndpointWithoutRequest<I
     public override async Task HandleAsync(CancellationToken ct)
     {
         var result = await mediator.Send(new GetMyProfileQuery(), ct);
-        await SendAsync(result.ToMinimalApiResult(), cancellation: ct);
+        // await SendAsync(result.ToMinimalApiResult(), cancellation: ct);
+        await HttpContext.WriteAsApiResponse(result);
     }
 }

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace F.Fireworks.Api.Features.Library.libraryTopics;
 
-public class GetTopicsEndpoint(IMediator mediator) : Endpoint<TopicFilter, IResult>
+public class GetTopicsEndpoint(IMediator mediator) : Endpoint<TopicFilter>
 {
     public override void Configure()
     {
@@ -23,6 +23,6 @@ public class GetTopicsEndpoint(IMediator mediator) : Endpoint<TopicFilter, IResu
     public override async Task HandleAsync([AsParameters] TopicFilter request, CancellationToken ct)
     {
         var result = await mediator.Send(new GetTopicsQuery(request), ct);
-        await SendAsync(result.ToMinimalApiResult(), cancellation: ct);
+        await this.SendMyResultAsync(result, ct);
     }
 }

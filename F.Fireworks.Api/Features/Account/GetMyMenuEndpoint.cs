@@ -19,6 +19,6 @@ public class GetMyMenuEndpoint(IMediator mediator) : EndpointWithoutRequest<IRes
     public override async Task HandleAsync(CancellationToken ct)
     {
         var result = await mediator.Send(new GetMyMenuQuery(), ct);
-        await SendAsync(result.ToMinimalApiResult(), cancellation: ct);
+        await this.SendMyResultAsync(result, ct);
     }
 }

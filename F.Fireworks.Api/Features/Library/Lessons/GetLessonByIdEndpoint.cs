@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace F.Fireworks.Api.Features.Library.Lessons;
 
-public class GetLessonByIdEndpoint(IMediator mediator) : Endpoint<GetLessonByIdQuery, IResult>
+public class GetLessonByIdEndpoint(IMediator mediator) : Endpoint<GetLessonByIdQuery>
 {
     public override void Configure()
     {
@@ -22,6 +22,6 @@ public class GetLessonByIdEndpoint(IMediator mediator) : Endpoint<GetLessonByIdQ
     public override async Task HandleAsync([AsParameters] GetLessonByIdQuery request, CancellationToken ct)
     {
         var result = await mediator.Send(request, ct);
-        await SendAsync(result.ToMinimalApiResult(), cancellation: ct);
+        await this.SendMyResultAsync(result, ct);
     }
 }

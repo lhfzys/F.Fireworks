@@ -24,6 +24,6 @@ public class GetMySessionsEndpoint(IMediator mediator) : EndpointWithoutRequest<
     public override async Task HandleAsync(CancellationToken ct)
     {
         var result = await mediator.Send(new GetMySessionsQuery(), ct);
-        await SendAsync(result.ToMinimalApiResult(), cancellation: ct);
+        await this.SendMyResultAsync(result, ct);
     }
 }

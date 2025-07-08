@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace F.Fireworks.Api.Features.Tenants;
 
-public class GetTenantsEndpoint(IMediator mediator) : Endpoint<TenantFilter, IResult>
+public class GetTenantsEndpoint(IMediator mediator) : Endpoint<TenantFilter>
 {
     public override void Configure()
     {
@@ -23,6 +23,6 @@ public class GetTenantsEndpoint(IMediator mediator) : Endpoint<TenantFilter, IRe
     public override async Task HandleAsync([AsParameters] TenantFilter req, CancellationToken ct)
     {
         var result = await mediator.Send(new GetTenantsQuery(req), ct);
-        await SendAsync(result.ToMinimalApiResult(), cancellation: ct);
+        await this.SendMyResultAsync(result, ct);
     }
 }

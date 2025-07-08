@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace F.Fireworks.Api.Features.Library.Grades;
 
-public class UpdateTopicEndpoint(IMediator mediator) : Endpoint<UpdateTopicCommand, IResult>
+public class UpdateTopicEndpoint(IMediator mediator) : Endpoint<UpdateTopicCommand>
 {
     public override void Configure()
     {
@@ -22,6 +22,6 @@ public class UpdateTopicEndpoint(IMediator mediator) : Endpoint<UpdateTopicComma
     public override async Task HandleAsync(UpdateTopicCommand req, CancellationToken ct)
     {
         var result = await mediator.Send(req, ct);
-        await SendAsync(result.ToMinimalApiResult(), cancellation: ct);
+        await this.SendMyResultAsync(result, ct);
     }
 }

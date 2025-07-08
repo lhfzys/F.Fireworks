@@ -6,11 +6,10 @@ using F.Fireworks.Infrastructure.Auth;
 using FastEndpoints;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace F.Fireworks.Api.Features.Users;
 
-public class GetUsersEndpoint(IMediator mediator) : Endpoint<UserFilter, IResult>
+public class GetUsersEndpoint(IMediator mediator) : Endpoint<UserFilter>
 {
     public override void Configure()
     {
@@ -25,6 +24,6 @@ public class GetUsersEndpoint(IMediator mediator) : Endpoint<UserFilter, IResult
     {
         var query = new GetUsersQuery(req);
         var result = await mediator.Send(query, ct);
-        await SendAsync(result.ToMinimalApiResult(), cancellation: ct);
+        await this.SendMyResultAsync(result, ct);
     }
 }

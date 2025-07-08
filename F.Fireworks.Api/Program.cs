@@ -22,8 +22,6 @@ builder.Services.AddRateLimiting();
 // 注册跨域
 builder.Services.AddCorsPolicy(builder.Configuration);
 var app = builder.Build();
-app.UseMiddleware<AuditLogMiddleware>();
-app.UseSwaggerDocumentation();
 app.UseHttpsRedirection();
 app.UseSecurityHeaders();
 app.UseCors("DefaultCorsPolicy");
@@ -31,10 +29,13 @@ app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseMiddleware<AuditLogMiddleware>();
 app.UseFastEndpoints(c => { c.Endpoints.RoutePrefix = "api"; });
-await app.SeedDataAsync();
+app.UseSwaggerDocumentation();
 app.MapHealthChecks("/healthz", new HealthCheckOptions
 {
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 });
+app.MapHealthChecksUI(options => { options.UIPath = "/health-ui"; });
+await app.SeedDataAsync();
 app.Run();

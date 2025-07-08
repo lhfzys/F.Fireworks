@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace F.Fireworks.Api.Features.Users;
 
-public class DeleteUserEndpoint(IMediator mediator) : Endpoint<DeleteUserCommand, IResult>
+public class DeleteUserEndpoint(IMediator mediator) : Endpoint<DeleteUserCommand>
 {
     public override void Configure()
     {
@@ -22,6 +22,6 @@ public class DeleteUserEndpoint(IMediator mediator) : Endpoint<DeleteUserCommand
     public override async Task HandleAsync(DeleteUserCommand req, CancellationToken ct)
     {
         var result = await mediator.Send(req, ct);
-        await SendAsync(result.ToMinimalApiResult(), cancellation: ct);
+        await this.SendMyResultAsync(result, ct);
     }
 }

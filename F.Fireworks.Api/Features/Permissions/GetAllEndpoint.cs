@@ -28,6 +28,6 @@ public class GetAllEndpoint(IMediator mediator) : EndpointWithoutRequest<IResult
     public override async Task HandleAsync(CancellationToken ct)
     {
         var result = await mediator.Send(new GetAllPermissionsQuery(), ct);
-        await SendAsync(result.ToMinimalApiResult(), cancellation: ct);
+        await this.SendMyResultAsync(result, ct);
     }
 }

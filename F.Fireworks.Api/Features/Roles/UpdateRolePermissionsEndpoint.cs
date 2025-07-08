@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace F.Fireworks.Api.Features.Roles;
 
-public class UpdateRolePermissionsEndpoint(IMediator mediator) : Endpoint<UpdateRolePermissionsCommand, IResult>
+public class UpdateRolePermissionsEndpoint(IMediator mediator) : Endpoint<UpdateRolePermissionsCommand>
 {
     public override void Configure()
     {
@@ -22,6 +22,6 @@ public class UpdateRolePermissionsEndpoint(IMediator mediator) : Endpoint<Update
     public override async Task HandleAsync(UpdateRolePermissionsCommand req, CancellationToken ct)
     {
         var result = await mediator.Send(req, ct);
-        await SendAsync(result.ToMinimalApiResult(), cancellation: ct);
+        await this.SendMyResultAsync(result, ct);
     }
 }

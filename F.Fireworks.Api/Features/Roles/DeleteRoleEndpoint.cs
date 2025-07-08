@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace F.Fireworks.Api.Features.Roles;
 
-public class DeleteRoleEndpoint(IMediator mediator) : Endpoint<DeleteRoleCommand, IResult>
+public class DeleteRoleEndpoint(IMediator mediator) : Endpoint<DeleteRoleCommand>
 {
     public override void Configure()
     {
@@ -22,6 +22,6 @@ public class DeleteRoleEndpoint(IMediator mediator) : Endpoint<DeleteRoleCommand
     public override async Task HandleAsync(DeleteRoleCommand req, CancellationToken ct)
     {
         var result = await mediator.Send(req, ct);
-        await SendAsync(result.ToMinimalApiResult(), cancellation: ct);
+        await this.SendMyResultAsync(result, ct);
     }
 }
