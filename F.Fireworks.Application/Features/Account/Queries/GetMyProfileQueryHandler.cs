@@ -3,6 +3,8 @@ using F.Fireworks.Application.Contracts.Persistence;
 using F.Fireworks.Application.Contracts.Services;
 using F.Fireworks.Application.DTOs.Account;
 using F.Fireworks.Domain.Identity;
+using F.Fireworks.Shared.Enums;
+using F.Fireworks.Shared.Utils;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +37,21 @@ public class GetMyProfileQueryHandler(
         // 3. 获取用户的所有权限Code (调用新创建的服务)
         var permissions = await permissionService.GetPermissionCodesForUserAsync(user.Id);
 
-
+        var menuPermissions = await context.Permissions
+            .Where(p => permissions.Contains(p.Code) &&
+                        (p.Type == PermissionType.Menu || p.Type == PermissionType.Directory))
+            .OrderBy(p => p.SortOrder)
+            .Select(p => new MenuNodeDto
+            {
+                Id = p.Id,
+                ParentId = p.ParentId,
+                DisplayName = p.DisplayName,
+                Path = p.Path,
+                Icon = p.Icon,
+                SortOrder = p.SortOrder
+            })
+            .ToListAsync(cancellationToken);
+        var menuTree = TreeBuilder.BuildTree<MenuNodeDto, Guid>(menuPermissions);
         var profileDto = new UserProfileDto
         {
             Id = user.Id,
@@ -44,7 +60,8 @@ public class GetMyProfileQueryHandler(
 
             Tenant = new TenantInfo(user.Tenant.Id, user.Tenant.Name),
             Roles = roles.ToList(),
-            Permissions = permissions
+            Permissions = permissions,
+            Menus = menuTree
         };
 
         return Result<UserProfileDto>.Success(profileDto);

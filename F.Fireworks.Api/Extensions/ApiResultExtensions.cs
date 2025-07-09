@@ -1,4 +1,5 @@
 using Ardalis.Result;
+using F.Fireworks.Shared.Errors;
 using F.Fireworks.Shared.Models;
 using static Microsoft.AspNetCore.Http.StatusCodes;
 using IResult = Microsoft.AspNetCore.Http.IResult;
@@ -29,7 +30,10 @@ public static class ApiResultExtensions
         if (result.Status == ResultStatus.Invalid)
         {
             var invalidMessage = "Validation failed.";
-            var errors = result.ValidationErrors.Select(e => e.ErrorMessage).ToList();
+            var errors = result.ValidationErrors.Select(e => new ApiErrorDetail(
+                char.ToLowerInvariant(e.Identifier[0]) + e.Identifier[1..],
+                e.ErrorMessage
+            )).ToList();
             return ApiResponse<T>.Fail(invalidMessage, errors);
         }
 
@@ -45,7 +49,10 @@ public static class ApiResultExtensions
             ResultStatus.NotFound => Results.NotFound(
                 ApiResponse<T>.Fail(result.Errors.FirstOrDefault() ?? "Resource not found.")),
             ResultStatus.Invalid => Results.BadRequest(ApiResponse<T>.Fail("Validation failed.",
-                result.ValidationErrors.Select(e => e.ErrorMessage).ToList())),
+                result.ValidationErrors.Select(e => new ApiErrorDetail(
+                    char.ToLowerInvariant(e.Identifier[0]) + e.Identifier[1..],
+                    e.ErrorMessage
+                )).ToList())),
             ResultStatus.Unauthorized => Results.Unauthorized(),
             ResultStatus.Forbidden => Results.Forbid(),
             ResultStatus.Error => Results.Json(
@@ -66,7 +73,10 @@ public static class ApiResultExtensions
             ResultStatus.NotFound => Results.NotFound(
                 ApiResponse.Fail(result.Errors.FirstOrDefault() ?? "Resource not found.")),
             ResultStatus.Invalid => Results.BadRequest(ApiResponse.Fail("Validation failed.",
-                result.ValidationErrors.Select(e => e.ErrorMessage).ToList())),
+                result.ValidationErrors.Select(e => new ApiErrorDetail(
+                    char.ToLowerInvariant(e.Identifier[0]) + e.Identifier[1..],
+                    e.ErrorMessage
+                )).ToList())),
             ResultStatus.Unauthorized => Results.Unauthorized(),
             ResultStatus.Forbidden => Results.Forbid(),
             _ => Results.Json(ApiResponse.Fail(result.Errors.FirstOrDefault() ?? "An unexpected error occurred."),

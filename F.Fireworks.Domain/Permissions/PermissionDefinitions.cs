@@ -5,6 +5,12 @@ namespace F.Fireworks.Domain.Permissions;
 public static class PermissionDefinitions
 {
     // 注意 FieldName 定义后不要改变
+    [Permission("Dashboard", PermissionType.Directory, 0, "/dashboard")]
+    public const string Dashboard = "Dashboard";
+
+    [Permission("首页", PermissionType.Menu, 1, "/dashboard", Dashboard)]
+    public const string Home = "Dashboard.Home";
+
     // 系统管理目录
     [Permission("系统管理", PermissionType.Directory, 100, "/system")]
     public const string System = "System";
@@ -76,7 +82,7 @@ public static class PermissionDefinitions
     [Permission("强制下线", PermissionType.Button, 2, parentCode: Sessions)]
     public const string SessionsRevoke = "System.Sessions.Revoke";
 
-    [Permission("内容库管理", PermissionType.Directory, 200, "/library")]
+    [Permission("内容库", PermissionType.Directory, 200, "/library")]
     public const string Library = "Library";
 
     [Permission("年级管理", PermissionType.Menu, 1, "/library/grades", Library)]

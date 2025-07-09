@@ -12,6 +12,7 @@ public record UserProfileDto
 
     public List<string> Roles { get; init; } = [];
     public List<string> Permissions { get; init; } = [];
+    public List<MenuNodeDto> Menus { get; init; } = [];
 }
 
 public record TenantInfo(Guid Id, string Name);

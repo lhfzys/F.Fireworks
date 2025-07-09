@@ -1,3 +1,5 @@
+using F.Fireworks.Shared.Errors;
+
 namespace F.Fireworks.Shared.Models;
 
 public class ApiResponse<T>
@@ -5,14 +7,15 @@ public class ApiResponse<T>
     public bool IsSuccess { get; set; }
     public T? Data { get; set; }
     public string? Message { get; set; }
-    public List<string>? Errors { get; set; }
+
+    public List<ApiErrorDetail>? Errors { get; set; }
 
     public static ApiResponse<T> Success(T data, string? message = null)
     {
         return new ApiResponse<T> { IsSuccess = true, Data = data, Message = message };
     }
 
-    public static ApiResponse<T> Fail(string message, List<string>? errors = null)
+    public static ApiResponse<T> Fail(string message, List<ApiErrorDetail>? errors = null)
     {
         return new ApiResponse<T> { IsSuccess = false, Message = message, Errors = errors };
     }
@@ -28,7 +31,7 @@ public class ApiResponse : ApiResponse<object>
         return new ApiResponse { IsSuccess = true, Data = null, Message = message };
     }
 
-    public new static ApiResponse Fail(string message, List<string>? errors = null)
+    public new static ApiResponse Fail(string message, List<ApiErrorDetail>? errors = null)
     {
         return new ApiResponse { IsSuccess = false, Data = null, Message = message, Errors = errors };
     }
