@@ -82,7 +82,7 @@ public static class PermissionDefinitions
     [Permission("强制下线", PermissionType.Button, 2, parentCode: Sessions)]
     public const string SessionsRevoke = "System.Sessions.Revoke";
 
-    [Permission("内容库", PermissionType.Directory, 200, "/library")]
+    [Permission("课程管理", PermissionType.Directory, 200, "/library")]
     public const string Library = "Library";
 
     [Permission("年级管理", PermissionType.Menu, 1, "/library/grades", Library)]
