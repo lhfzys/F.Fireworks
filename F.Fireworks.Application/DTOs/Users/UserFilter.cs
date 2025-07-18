@@ -11,4 +11,7 @@ public class UserFilter : PagedAndSortedRequest
 
     [FilterOperator(FilterOperator.Equals)]
     public UserStatus? Status { get; set; }
+
+    [FilterOperator(FilterOperator.Equals)]
+    public Guid? TenantId { get; set; }
 }

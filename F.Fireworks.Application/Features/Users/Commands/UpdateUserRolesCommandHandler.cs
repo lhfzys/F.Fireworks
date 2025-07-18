@@ -1,17 +1,38 @@
 ﻿using Ardalis.Result;
+using F.Fireworks.Application.Contracts.Persistence;
+using F.Fireworks.Application.Contracts.Services;
 using F.Fireworks.Domain.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace F.Fireworks.Application.Features.Users.Commands;
 
-public class UpdateUserRolesCommandHandler(UserManager<ApplicationUser> userManager)
+public class UpdateUserRolesCommandHandler(
+    UserManager<ApplicationUser> userManager,
+    ICurrentUserService currentUser,
+    IApplicationDbContext context)
     : IRequestHandler<UpdateUserRolesCommand, Result>
 {
     public async Task<Result> Handle(UpdateUserRolesCommand request, CancellationToken cancellationToken)
     {
         var user = await userManager.FindByIdAsync(request.UserId.ToString());
-        if (user is null) return Result.NotFound("User not found.");
+        if (user is null) return Result.NotFound("用户不存在或已被删除");
+        if (!currentUser.IsInRole("SuperAdmin") && user.TenantId != currentUser.TenantId)
+            return Result.Forbidden("用户不存在或已被删除");
+        if (!currentUser.IsInRole("SuperAdmin"))
+        {
+            var tenantId = currentUser.TenantId;
+            var rolesInTenantCount = await context.Roles
+                .CountAsync(r => r.TenantId == tenantId && request.RoleNames.Contains(r.Name), cancellationToken);
+
+            if (rolesInTenantCount != request.RoleNames.Count)
+                return Result.Invalid(new ValidationError
+                {
+                    Identifier = "RoleNames",
+                    ErrorMessage = "有角色不属于该租户"
+                });
+        }
 
         // 获取用户当前的角色
         var currentRoles = await userManager.GetRolesAsync(user);

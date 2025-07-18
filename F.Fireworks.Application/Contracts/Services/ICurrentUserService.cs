@@ -6,6 +6,8 @@ public interface ICurrentUserService
     string? UserName { get; }
     Guid? TenantId { get; }
 
+    bool IsInRole(string roleName);
+
     string? GetIpAddress();
     string? GetUserAgent();
     string? GetClaim(string claimType);

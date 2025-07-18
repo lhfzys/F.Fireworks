@@ -11,11 +11,14 @@ public class CreateRoleCommandHandler(RoleManager<ApplicationRole> roleManager, 
 {
     public async Task<Result<Guid>> Handle(CreateRoleCommand request, CancellationToken cancellationToken)
     {
+        var tenantId = currentUser.TenantId;
+        if (!currentUser.IsInRole("SuperAdmin") && tenantId is null) return Result.Forbidden();
+
         var newRole = new ApplicationRole
         {
             Name = request.Name,
             Description = request.Description,
-            TenantId = currentUser.TenantId ?? Guid.Empty
+            TenantId = currentUser.IsInRole("SuperAdmin") ? tenantId ?? Guid.Empty : tenantId!.Value
         };
         var result = await roleManager.CreateAsync(newRole);
         if (result.Succeeded) return Result<Guid>.Success(newRole.Id);

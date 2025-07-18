@@ -40,4 +40,9 @@ public class CurrentUserService(IHttpContextAccessor httpContextAccessor) : ICur
     {
         return httpContextAccessor.HttpContext?.Request.Headers.UserAgent.ToString();
     }
+
+    public bool IsInRole(string roleName)
+    {
+        return httpContextAccessor.HttpContext?.User?.IsInRole(roleName) ?? false;
+    }
 }
