@@ -11,5 +11,6 @@ public class TenantConfiguration : IEntityTypeConfiguration<Tenant>
         builder.HasKey(t => t.Id);
         builder.Property(t => t.Name).IsRequired().HasMaxLength(256);
         builder.Property(t => t.Attributes).HasColumnType("jsonb");
+        builder.HasOne(t => t.Plan).WithMany(p => p.Tenants).HasForeignKey(t => t.PlanId);
     }
 }

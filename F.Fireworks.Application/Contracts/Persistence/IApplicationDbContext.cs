@@ -2,6 +2,7 @@ using F.Fireworks.Domain.Courses;
 using F.Fireworks.Domain.Identity;
 using F.Fireworks.Domain.Logging;
 using F.Fireworks.Domain.Permissions;
+using F.Fireworks.Domain.Subscriptions;
 using F.Fireworks.Domain.Tenants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,8 @@ namespace F.Fireworks.Application.Contracts.Persistence;
 
 public interface IApplicationDbContext
 {
+    DbSet<Plan> Plans { get; }
+    DbSet<PlanPermission> PlanPermissions { get; }
     DbSet<Tenant> Tenants { get; }
     DbSet<Permission> Permissions { get; }
     DbSet<RefreshToken> RefreshTokens { get; }

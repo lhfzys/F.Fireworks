@@ -5,6 +5,7 @@ using F.Fireworks.Domain.Courses;
 using F.Fireworks.Domain.Identity;
 using F.Fireworks.Domain.Logging;
 using F.Fireworks.Domain.Permissions;
+using F.Fireworks.Domain.Subscriptions;
 using F.Fireworks.Domain.Tenants;
 using F.Fireworks.Infrastructure.Persistence.Configurations;
 using Microsoft.AspNetCore.Identity;
@@ -21,6 +22,8 @@ public class ApplicationDbContext(
         IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>(options), IApplicationDbContext
 {
     // --- 业务相关的实体 ---
+    public DbSet<Plan> Plans => Set<Plan>();
+    public DbSet<PlanPermission> PlanPermissions => Set<PlanPermission>();
     public DbSet<Tenant> Tenants => Set<Tenant>();
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
