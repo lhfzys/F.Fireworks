@@ -4,6 +4,7 @@ using F.Fireworks.Application.Contracts.Services;
 using F.Fireworks.Domain.Identity;
 using F.Fireworks.Infrastructure.Identity;
 using F.Fireworks.Infrastructure.Persistence;
+using F.Fireworks.Infrastructure.Persistence.Seeders;
 using F.Fireworks.Infrastructure.Services;
 using Hangfire;
 using Hangfire.PostgreSql;
@@ -47,6 +48,7 @@ public static class DependencyInjection
         services.AddScoped<IAuditLogPersister, AuditLogPersister>();
         services.AddScoped<IAuditService, AuditService>();
         services.AddScoped<IDataSanitizer, DataSanitizer>();
+        services.AddScoped<SuperAdminSeeder>();
 
         services.AddHangfire(config => config
             .UsePostgreSqlStorage(c =>

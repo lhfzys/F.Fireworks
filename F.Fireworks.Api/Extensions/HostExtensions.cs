@@ -1,7 +1,5 @@
-﻿using F.Fireworks.Domain.Identity;
-using F.Fireworks.Infrastructure.Persistence;
+﻿using F.Fireworks.Infrastructure.Persistence;
 using F.Fireworks.Infrastructure.Persistence.Seeders;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace F.Fireworks.Api.Extensions;
@@ -24,9 +22,7 @@ public static class HostExtensions
             await permissionSeeder.SeedAsync(CancellationToken.None);
 
             // 2. 然后植入超级管理员
-            var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
-            var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-            var superAdminSeeder = new SuperAdminSeeder(roleManager, userManager, context);
+            var superAdminSeeder = services.GetRequiredService<SuperAdminSeeder>();
             await superAdminSeeder.SeedAsync();
         }
         catch (Exception ex)

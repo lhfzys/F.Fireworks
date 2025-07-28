@@ -55,6 +55,10 @@ public static class ServiceCollectionExtensions
             .Bind(configuration.GetSection(JwtSettings.SectionName))
             .ValidateDataAnnotations()
             .ValidateOnStart();
+        services.AddOptions<InitialSetupSettings>()
+            .Bind(configuration.GetSection(InitialSetupSettings.SectionName))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
         return services;
     }
 

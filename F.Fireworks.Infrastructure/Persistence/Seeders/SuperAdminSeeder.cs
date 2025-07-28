@@ -1,21 +1,26 @@
 ﻿using F.Fireworks.Domain.Identity;
 using F.Fireworks.Domain.Permissions;
 using F.Fireworks.Domain.Tenants;
+using F.Fireworks.Infrastructure.Options;
 using F.Fireworks.Shared.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace F.Fireworks.Infrastructure.Persistence.Seeders;
 
 public class SuperAdminSeeder(
     RoleManager<ApplicationRole> roleManager,
     UserManager<ApplicationUser> userManager,
-    ApplicationDbContext context)
+    ApplicationDbContext context,
+    IOptions<InitialSetupSettings> settingsOptions)
 {
+    private readonly InitialSetupSettings _settings = settingsOptions.Value;
+
     public async Task SeedAsync()
     {
-        const string adminRoleName = "SuperAdmin";
-        const string adminUserName = "superadmin";
+        var adminRoleName = _settings.SuperAdminRoleName;
+        var adminUserConfig = _settings.DefaultAdmin;
         const string systemTenantName = "System";
 
         var systemTenant = await context.Tenants.FirstOrDefaultAsync(t => t.Name == systemTenantName);
@@ -62,17 +67,17 @@ public class SuperAdminSeeder(
         }
 
         // 3. 植入 SuperAdmin 用户
-        if (await userManager.FindByNameAsync(adminUserName) is null)
+        if (await userManager.FindByNameAsync(adminUserConfig.UserName) is null)
         {
             var adminUser = new ApplicationUser
             {
-                UserName = adminUserName,
-                Email = "superadmin@yourproject.com",
+                UserName = adminUserConfig.UserName,
+                Email = adminUserConfig.Email,
                 EmailConfirmed = true,
                 Status = UserStatus.Active,
                 TenantId = systemTenant.Id
             };
-            var result = await userManager.CreateAsync(adminUser, "123456");
+            var result = await userManager.CreateAsync(adminUser, adminUserConfig.DefaultPassword);
             if (result.Succeeded) await userManager.AddToRoleAsync(adminUser, adminRoleName);
         }
     }
