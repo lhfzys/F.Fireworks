@@ -15,5 +15,5 @@ public class MenuNodeDto : ITreeNode<MenuNodeDto, Guid>
 
     public Guid Id { get; set; }
 
-    [JsonIgnore] public Guid? ParentId { get; set; }
+     public Guid? ParentId { get; set; }
 }
