@@ -6,6 +6,7 @@ using F.Fireworks.Domain.Subscriptions;
 using F.Fireworks.Domain.Tenants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace F.Fireworks.Application.Contracts.Persistence;
 
@@ -27,5 +28,6 @@ public interface IApplicationDbContext
     DbSet<LibraryTopic> LibraryTopics { get; }
     DbSet<LibraryLesson> LibraryLessons { get; }
 
+    DatabaseFacade Database { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

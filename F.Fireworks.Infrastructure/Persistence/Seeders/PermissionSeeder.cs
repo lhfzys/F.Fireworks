@@ -25,7 +25,9 @@ public class PermissionSeeder(ApplicationDbContext context)
                 var needsUpdate = dbPermission.DisplayName != codePermission.DisplayName ||
                                   dbPermission.ParentId != codePermission.ParentId ||
                                   dbPermission.SortOrder != codePermission.SortOrder ||
-                                  dbPermission.Path != codePermission.Path || dbPermission.Type != codePermission.Type;
+                                  dbPermission.Path != codePermission.Path ||
+                                  dbPermission.Type != codePermission.Type || dbPermission.IsTenantPermission !=
+                                  codePermission.IsTenantPermission;
                 if (needsUpdate)
                 {
                     dbPermission.DisplayName = codePermission.DisplayName;
@@ -33,6 +35,7 @@ public class PermissionSeeder(ApplicationDbContext context)
                     dbPermission.SortOrder = codePermission.SortOrder;
                     dbPermission.Path = codePermission.Path;
                     dbPermission.Type = codePermission.Type;
+                    dbPermission.IsTenantPermission = codePermission.IsTenantPermission;
                     updatedPermissions.Add(dbPermission);
                 }
             }
@@ -77,7 +80,8 @@ public class PermissionSeeder(ApplicationDbContext context)
                     DisplayName = attribute.Description,
                     Type = attribute.Type,
                     SortOrder = attribute.SortOrder,
-                    Path = attribute.Path
+                    Path = attribute.Path,
+                    IsTenantPermission = attribute.IsTenantPermission
                 };
                 permissions.Add(permission);
                 permissionWithParentCode.Add((permission, attribute.ParentCode));

@@ -14,7 +14,7 @@ public class UpdatePlanCommandHandler(IApplicationDbContext context) : IRequestH
             .Include(p => p.Permissions)
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
-        if (plan is null) return Result.NotFound("Plan不存在或已被删除");
+        if (plan is null) return Result.NotFound("套餐计划不存在或已被删除");
 
         plan.Name = request.Name;
         plan.Description = request.Description;

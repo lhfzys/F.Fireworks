@@ -4,4 +4,4 @@ using MediatR;
 
 namespace F.Fireworks.Application.Features.Tenants.Commands;
 
-public record CreateTenantCommand(string Name, TenantType Type) : IRequest<Result<Guid>>;
+public record CreateTenantCommand(string Name, TenantType Type, Guid? PlanId) : IRequest<Result<Guid>>;

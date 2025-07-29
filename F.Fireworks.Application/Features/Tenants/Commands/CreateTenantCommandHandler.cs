@@ -15,7 +15,8 @@ public class CreateTenantCommandHandler(IApplicationDbContext context)
             Id = Guid.NewGuid(),
             Name = request.Name,
             Type = request.Type,
-            IsActive = true
+            IsActive = true,
+            PlanId = request.PlanId
         };
         context.Tenants.Add(newTenant);
         await context.SaveChangesAsync(cancellationToken);

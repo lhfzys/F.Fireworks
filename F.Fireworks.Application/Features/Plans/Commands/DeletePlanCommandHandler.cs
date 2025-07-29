@@ -13,9 +13,9 @@ public class DeletePlanCommandHandler(IApplicationDbContext context) : IRequestH
             .Include(p => p.Tenants)
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
 
-        if (plan is null) return Result.NotFound("Plan不存在或已被删除");
+        if (plan is null) return Result.NotFound("套餐计划不存在或已被删除");
 
-        if (plan.Tenants.Count != 0) return Result.Conflict("禁止删除，有关联的租户");
+        if (plan.Tenants.Count != 0) return Result.Conflict("无法删除，有关联的租户");
         context.Plans.Remove(plan);
         await context.SaveChangesAsync(cancellationToken);
         return Result.Success();

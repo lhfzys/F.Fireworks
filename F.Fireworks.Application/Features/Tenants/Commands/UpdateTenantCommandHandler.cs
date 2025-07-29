@@ -15,6 +15,7 @@ public class UpdateTenantCommandHandler(IApplicationDbContext context) : IReques
             return Result.NotFound("Tenant not found.");
         tenant.Name = request.Name;
         tenant.IsActive = request.IsActive;
+        tenant.PlanId = request.PlanId;
         await context.SaveChangesAsync(cancellationToken);
         return Result.Success();
     }

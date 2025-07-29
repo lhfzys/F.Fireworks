@@ -10,6 +10,7 @@ public class Permission : IEntity<Guid>
     public PermissionType Type { get; set; }
     public string? Description { get; set; }
     public int SortOrder { get; set; }
+    public bool IsTenantPermission { get; set; }
 
     // --- 用于菜单/目录的属性 ---
     public Guid? ParentId { get; set; }

@@ -3,4 +3,4 @@ using MediatR;
 
 namespace F.Fireworks.Application.Features.Tenants.Commands;
 
-public record UpdateTenantCommand(Guid Id, string Name, bool IsActive) : IRequest<Result>;
+public record UpdateTenantCommand(Guid Id, string Name, bool IsActive, Guid? PlanId) : IRequest<Result>;

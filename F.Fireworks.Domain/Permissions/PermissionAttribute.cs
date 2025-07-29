@@ -7,6 +7,7 @@ public class PermissionAttribute(
     string description,
     PermissionType type,
     int sortOrder,
+    bool isTenantPermission,
     string? path = null,
     string? parentCode = null)
     : Attribute
@@ -14,6 +15,7 @@ public class PermissionAttribute(
     public string Description { get; } = description;
     public PermissionType Type { get; } = type;
     public int SortOrder { get; } = sortOrder;
+    public bool IsTenantPermission { get; } = isTenantPermission;
     public string? Path { get; } = path;
     public string? ParentCode { get; } = parentCode;
 }

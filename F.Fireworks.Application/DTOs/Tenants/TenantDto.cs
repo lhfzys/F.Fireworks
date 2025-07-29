@@ -2,4 +2,6 @@ using F.Fireworks.Shared.Enums;
 
 namespace F.Fireworks.Application.DTOs.Tenants;
 
-public record TenantDto(Guid Id, string Name, TenantType Type, bool IsActive);
+public record TenantDto(Guid Id, string Name, TenantType Type, bool IsActive, Guid? PlanId);
+
+public record TenantDetailsDto(Guid Id, string Name, TenantType Type, bool IsActive, Guid? PlanId);

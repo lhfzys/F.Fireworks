@@ -2,7 +2,8 @@ namespace F.Fireworks.Shared.Enums;
 
 public enum TenantType
 {
-    TrainingCenter = 1,
-    Kindergarten = 2,
-    System = 3
+    Kindergarten = 1,
+    TrainingCenter = 2,
+    ArtStudio = 3,
+    System = 4
 }
