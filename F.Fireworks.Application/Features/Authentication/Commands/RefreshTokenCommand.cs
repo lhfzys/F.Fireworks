@@ -4,4 +4,4 @@ using MediatR;
 
 namespace F.Fireworks.Application.Features.Authentication.Commands;
 
-public record RefreshTokenCommand(string AccessToken, string RefreshToken) : IRequest<Result<LoginDto.LoginResponse>>;
+public record RefreshTokenCommand : IRequest<Result<LoginResponse>>;
