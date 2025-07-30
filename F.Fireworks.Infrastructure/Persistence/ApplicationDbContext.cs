@@ -52,6 +52,25 @@ public class ApplicationDbContext(
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+        builder.Entity<ApplicationRole>(b =>
+        {
+            var index = b.HasIndex(r => r.NormalizedName).Metadata;
+            b.Metadata.RemoveIndex(index);
+            b.HasIndex(r => new { r.TenantId, r.NormalizedName }).IsUnique()
+                .HasDatabaseName("IX_Roles_Tenant_NormalizedName");
+        });
+        builder.Entity<ApplicationUser>(b =>
+        {
+            var userNameIndex = b.HasIndex(u => u.NormalizedUserName).Metadata;
+            b.Metadata.RemoveIndex(userNameIndex);
+            b.HasIndex(u => new { u.TenantId, u.NormalizedUserName }).IsUnique()
+                .HasDatabaseName("IX_Users_Tenant_NormalizedUserName");
+
+            var emailIndex = b.HasIndex(u => u.NormalizedEmail).Metadata;
+            b.Metadata.RemoveIndex(emailIndex);
+            b.HasIndex(u => new { u.TenantId, u.NormalizedEmail }).IsUnique()
+                .HasDatabaseName("IX_Users_Tenant_NormalizedEmail");
+        });
         builder.ApplyIdentityTableNamingConvention();
         builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }

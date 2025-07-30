@@ -29,15 +29,16 @@ public static class ApiResultExtensions
         if (result.IsSuccess) return ApiResponse<T>.Success(result.Value, result.SuccessMessage);
         if (result.Status == ResultStatus.Invalid)
         {
-            var invalidMessage = "Validation failed.";
-            var errors = result.ValidationErrors.Select(e => new ApiErrorDetail(
+            const string invalidMessage = "Validation failed.";
+            var validationErrors = result.ValidationErrors.Select(e => new ApiErrorDetail(
                 char.ToLowerInvariant(e.Identifier[0]) + e.Identifier[1..],
                 e.ErrorMessage
             )).ToList();
-            return ApiResponse<T>.Fail(invalidMessage, errors);
+            return ApiResponse<T>.Fail(invalidMessage, validationErrors);
         }
 
-        return ApiResponse<T>.Fail(result.Errors.FirstOrDefault() ?? "An unexpected error occurred.");
+        var errorMessage = result.Errors.FirstOrDefault() ?? "An unexpected error occurred.";
+        return ApiResponse<T>.Fail(errorMessage);
     }
 
     public static IResult ToMinimalApiResult<T>(this Result<T> result)

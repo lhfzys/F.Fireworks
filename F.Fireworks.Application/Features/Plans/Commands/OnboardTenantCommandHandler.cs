@@ -46,7 +46,12 @@ public class OnboardTenantCommandHandler(
             var adminRole = new ApplicationRole
                 { Name = "Admin", Description = "Administrator role for the tenant", TenantId = tenant.Id };
             var roleResult = await roleManager.CreateAsync(adminRole);
-            if (!roleResult.Succeeded) throw new InvalidOperationException("Failed to create tenant admin role.");
+            if (!roleResult.Succeeded)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                var errorMessages = string.Join("\n", roleResult.Errors.Select(e => e.Description));
+                return Result.Error($"无法创建租户管理员角色: {errorMessages}");
+            }
 
             // 3. 为这个角色分配预设的租户管理权限
             var permissionsToAssign = await context.Permissions
@@ -67,11 +72,19 @@ public class OnboardTenantCommandHandler(
             };
             var userResult = await userManager.CreateAsync(adminUser, request.AdminPassword);
             if (!userResult.Succeeded)
-                throw new InvalidOperationException(
-                    $"Failed to create tenant admin user: {string.Join(", ", userResult.Errors.Select(e => e.Description))}");
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                var errorMessages = string.Join("\n", userResult.Errors.Select(e => e.Description));
+                return Result.Error($"无法创建租户管理员账户: {errorMessages}");
+            }
 
             // 5. 将“Admin”角色分配给这个用户
-            await userManager.AddToRoleAsync(adminUser, adminRole.Name);
+            context.UserRoles.Add(new IdentityUserRole<Guid>
+            {
+                UserId = adminUser.Id,
+                RoleId = adminRole.Id
+            });
+
 
             // 6. 一次性保存所有更改
             await context.SaveChangesAsync(cancellationToken);
@@ -84,7 +97,7 @@ public class OnboardTenantCommandHandler(
         catch (Exception ex)
         {
             await transaction.RollbackAsync(cancellationToken);
-            return Result.Error(ex.Message);
+            return Result.Error("引导新租户时发生意外错误。");
         }
     }
 }

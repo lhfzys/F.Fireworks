@@ -37,6 +37,17 @@ public static class DependencyInjection
             .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
+
+        // 覆盖Identity默认验证器
+        var defaultUserValidator =
+            services.FirstOrDefault(d => d.ImplementationType == typeof(UserValidator<ApplicationUser>));
+        if (defaultUserValidator != null) services.Remove(defaultUserValidator);
+        services.AddScoped<IUserValidator<ApplicationUser>, TenantAwareUserValidator>();
+        var defaultRoleValidator =
+            services.FirstOrDefault(d => d.ImplementationType == typeof(RoleValidator<ApplicationRole>));
+        if (defaultRoleValidator != null) services.Remove(defaultRoleValidator);
+        services.AddScoped<IRoleValidator<ApplicationRole>, TenantAwareRoleValidator>();
+
         services.AddScoped<ITokenService, JwtService>();
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
         services.AddScoped<ICurrentUserService, CurrentUserService>();
