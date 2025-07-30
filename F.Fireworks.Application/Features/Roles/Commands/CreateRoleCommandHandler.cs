@@ -12,7 +12,7 @@ public class CreateRoleCommandHandler(RoleManager<ApplicationRole> roleManager, 
     public async Task<Result<Guid>> Handle(CreateRoleCommand request, CancellationToken cancellationToken)
     {
         var tenantId = currentUser.TenantId;
-        if (!currentUser.IsInRole("SuperAdmin") && tenantId is null) return Result.Forbidden();
+        if (!currentUser.IsInRole("SuperAdmin") && tenantId is null) return Result.Forbidden("您无权操作");
 
         var newRole = new ApplicationRole
         {

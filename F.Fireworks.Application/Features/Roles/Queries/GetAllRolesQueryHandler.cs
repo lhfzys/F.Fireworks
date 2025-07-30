@@ -15,9 +15,10 @@ public class GetAllRolesQueryHandler(ICurrentUserService currentUser, RoleManage
     {
         var query = roleManager.Roles.AsNoTracking();
         if (!currentUser.IsInRole("SuperAdmin")) query = query.Where(r => r.TenantId == currentUser.TenantId);
-        var roles = await query.ToListAsync(cancellationToken);
+        var roles = await query.OrderBy(r => r.Name).ToListAsync(cancellationToken);
+
         var roleDtos = roles
-            .Select(r => new RoleDto(r.Id, r.Name, r.Description))
+            .Select(r => new RoleDto(r.Id, r.Name!, r.Description, r.CreatedOn))
             .ToList();
         return Result<List<RoleDto>>.Success(roleDtos);
     }

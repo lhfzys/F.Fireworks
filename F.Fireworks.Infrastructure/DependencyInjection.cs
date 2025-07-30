@@ -39,6 +39,7 @@ public static class DependencyInjection
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
             })
             .AddRoles<ApplicationRole>()
+            .AddSignInManager<SignInManager<ApplicationUser>>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 

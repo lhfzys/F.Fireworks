@@ -12,9 +12,8 @@ public class UpdateRoleCommandHandler(RoleManager<ApplicationRole> roleManager, 
     public async Task<Result> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
     {
         var role = await roleManager.FindByIdAsync(request.Id.ToString());
-        if (role is null) return Result.NotFound("角色不存在");
-        if (!currentUser.IsInRole("SuperAdmin") && role.TenantId != currentUser.TenantId)
-            return Result.Forbidden("禁止变更");
+        if (role is null || (!currentUser.IsInRole("SuperAdmin") && role.TenantId != currentUser.TenantId))
+            return Result.NotFound("角色不存在或已被删除");
 
         role.Name = request.Name;
         role.Description = request.Description;

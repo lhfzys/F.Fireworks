@@ -15,14 +15,13 @@ public class DeleteRoleCommandHandler(
     public async Task<Result> Handle(DeleteRoleCommand request, CancellationToken cancellationToken)
     {
         var role = await roleManager.FindByIdAsync(request.Id.ToString());
-        if (role is null) return Result.NotFound("角色不存在");
-        if (!currentUser.IsInRole("SuperAdmin") && role.TenantId != currentUser.TenantId)
-            return Result.Forbidden("禁止删除");
+        if (role is null || (!currentUser.IsInRole("SuperAdmin") && role.TenantId != currentUser.TenantId))
+            return Result.NotFound("角色不存在或已被删除");
         if (role.Name != null)
         {
             var usersInRole = await userManager.GetUsersInRoleAsync(role.Name);
             if (usersInRole.Any())
-                return Result.Error("当前角色已被使用，禁止删除");
+                return Result.Error("当前角色已被使用，无法删除");
         }
 
         var result = await roleManager.DeleteAsync(role);

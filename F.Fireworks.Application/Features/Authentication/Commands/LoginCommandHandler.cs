@@ -20,8 +20,8 @@ public class LoginCommandHandler(
     ITokenService tokenService,
     ILoginLogService loginLogService,
     IClientIpService clientIpService,
-    ICurrentUserService currentUserService,
     IApplicationDbContext context,
+    ICurrentUserService currentUserService,
     IHttpContextAccessor httpContextAccessor)
     : IRequestHandler<LoginCommand, Result<LoginResponse>>
 {
