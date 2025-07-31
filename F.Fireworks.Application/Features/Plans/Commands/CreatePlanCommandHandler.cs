@@ -1,11 +1,13 @@
 using Ardalis.Result;
 using F.Fireworks.Application.Contracts.Persistence;
+using F.Fireworks.Application.Contracts.Services;
 using F.Fireworks.Domain.Subscriptions;
 using MediatR;
 
 namespace F.Fireworks.Application.Features.Plans.Commands;
 
-public class CreatePlanCommandHandler(IApplicationDbContext context) : IRequestHandler<CreatePlanCommand, Result<Guid>>
+public class CreatePlanCommandHandler(IApplicationDbContext context, ICurrentUserService currentUser)
+    : IRequestHandler<CreatePlanCommand, Result<Guid>>
 {
     public async Task<Result<Guid>> Handle(CreatePlanCommand request, CancellationToken cancellationToken)
     {

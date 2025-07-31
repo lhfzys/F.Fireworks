@@ -1,4 +1,5 @@
-﻿using F.Fireworks.Domain.Identity;
+﻿using F.Fireworks.Domain.Constants;
+using F.Fireworks.Domain.Identity;
 using F.Fireworks.Domain.Permissions;
 using F.Fireworks.Domain.Tenants;
 using F.Fireworks.Infrastructure.Options;
@@ -22,6 +23,10 @@ public class SuperAdminSeeder(
         var adminRoleName = _settings.SuperAdminRoleName;
         var adminUserConfig = _settings.DefaultAdmin;
         const string systemTenantName = "System";
+
+        if (adminRoleName != RoleConstants.SuperAdmin)
+            throw new InvalidOperationException(
+                $"Configuration mismatch: SuperAdminRoleName in appsettings ('{adminRoleName}') does not match the domain constant ('{RoleConstants.SuperAdmin}').");
 
         var systemTenant = await context.Tenants.FirstOrDefaultAsync(t => t.Name == systemTenantName);
         if (systemTenant is null)

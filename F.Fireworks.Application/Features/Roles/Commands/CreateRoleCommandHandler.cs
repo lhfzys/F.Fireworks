@@ -18,7 +18,7 @@ public class CreateRoleCommandHandler(RoleManager<ApplicationRole> roleManager, 
         {
             Name = request.Name,
             Description = request.Description,
-            TenantId = currentUser.IsInRole("SuperAdmin") ? tenantId ?? Guid.Empty : tenantId!.Value
+            TenantId = tenantId!.Value
         };
         var result = await roleManager.CreateAsync(newRole);
         if (result.Succeeded) return Result<Guid>.Success(newRole.Id);
