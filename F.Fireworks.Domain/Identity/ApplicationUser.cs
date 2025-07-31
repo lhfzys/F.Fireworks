@@ -18,6 +18,11 @@ public class ApplicationUser : IdentityUser<Guid>, IAuditable, ISoftDeletable
     /// </summary>
     public Guid TenantId { get; set; }
 
+    /// <summary>
+    ///     需要修改密码
+    /// </summary>
+    public bool MustChangePassword { get; set; }
+
     // --- 导航属性 ---
     public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 

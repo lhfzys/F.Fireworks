@@ -68,6 +68,7 @@ public class OnboardTenantCommandHandler(
                 UserName = request.AdminUserName,
                 TenantId = tenant.Id,
                 EmailConfirmed = true,
+                MustChangePassword = true,
                 Status = UserStatus.Active
             };
             var userResult = await userManager.CreateAsync(adminUser, request.AdminPassword);

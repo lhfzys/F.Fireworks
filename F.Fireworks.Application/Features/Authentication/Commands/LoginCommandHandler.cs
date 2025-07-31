@@ -79,6 +79,10 @@ public class LoginCommandHandler(
         // 5. 记录成功日志
         await loginLogService.LogAsync(user.Id, tenant.Id, request.Identifier, true, "LoginSuccess", cancellationToken);
 
+        if (user.MustChangePassword)
+        {
+            
+        }
         // 6. 生成 Access Token
         var roles = await userManager.GetRolesAsync(user);
         var accessToken = tokenService.CreateToken(user, roles);

@@ -34,6 +34,12 @@ public static class PermissionDefinitions
     [Permission("分配角色", PermissionType.Button, 5, true, parentCode: Users)]
     public const string UsersUpdateRoles = "System.Users.UpdateRoles";
 
+    [Permission("修改密码", PermissionType.Button, 6, true, parentCode: Users)]
+    public const string UsersChangePassword = "System.Users.ChangePassword";
+
+    [Permission("重置密码", PermissionType.Button, 7, true, parentCode: Users)]
+    public const string UsersResetPassword = "System.Users.ResetPassword";
+
     // 角色管理
     [Permission("角色管理", PermissionType.Menu, 2, true, "/system/roles", System)]
     public const string Roles = "System.Roles";
