@@ -24,7 +24,6 @@ public class GetMyMenuQueryHandler(
         var permissionCodes = await permissionService.GetPermissionCodesForUserAsync(userId.Value);
         if (permissionCodes.Count == 0) return Result<List<MenuNodeDto>>.Success([]);
 
-        Console.WriteLine(permissionCodes.Count);
         // 2. 从数据库中筛选出属于该用户的、且类型为菜单或目录的权限
         var menuPermissions = await context.Permissions
             .Where(p => permissionCodes.Contains(p.Code) &&
@@ -37,6 +36,7 @@ public class GetMyMenuQueryHandler(
                 DisplayName = p.DisplayName,
                 Path = p.Path,
                 Icon = p.Icon,
+                Code = p.Code,
                 SortOrder = p.SortOrder
             })
             .ToListAsync(cancellationToken);

@@ -79,6 +79,9 @@ public static class PermissionDefinitions
     [Permission("删除租户", PermissionType.Button, 4, false, parentCode: Tenants)]
     public const string TenantsDelete = "System.Tenants.Delete";
 
+    [Permission("清空租户", PermissionType.Button, 5, false, parentCode: Tenants)]
+    public const string TenantsPurge = "System.Tenants.Purge";
+
     [Permission("会话管理", PermissionType.Menu, 5, false, "/system/sessions", System)]
     public const string Sessions = "System.Sessions";
 

@@ -5,7 +5,7 @@ using MediatR;
 
 namespace F.Fireworks.Api.Features.Authentication;
 
-public class RefreshTokenEndpoint(IMediator mediator) : Endpoint<RefreshTokenCommand>
+public class RefreshTokenEndpoint(IMediator mediator) : EndpointWithoutRequest
 {
     public override void Configure()
     {
@@ -15,8 +15,9 @@ public class RefreshTokenEndpoint(IMediator mediator) : Endpoint<RefreshTokenCom
         Summary(s => s.Summary = "刷新令牌");
     }
 
-    public override async Task HandleAsync(RefreshTokenCommand req, CancellationToken ct)
+    public override async Task HandleAsync(CancellationToken ct)
     {
+        var req = new RefreshTokenCommand();
         var result = await mediator.Send(req, ct);
         await this.SendMyResultAsync(result, ct);
     }

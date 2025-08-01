@@ -1,5 +1,6 @@
 using Ardalis.Result;
 using F.Fireworks.Application.Contracts.Persistence;
+using F.Fireworks.Domain.Constants;
 using MediatR;
 
 namespace F.Fireworks.Application.Features.Tenants.Commands;
@@ -10,6 +11,8 @@ public class DeleteTenantCommandHandler(IApplicationDbContext context) : IReques
     {
         var tenant = await context.Tenants.FindAsync([request.Id], cancellationToken);
         if (tenant is null) return Result.NotFound("租户不存在或已被删除");
+
+        if (tenant.Name == SystemConstants.SuperTenants) return Result.Forbidden("租户 'System' 不能被修改");
 
         context.Tenants.Remove(tenant);
 

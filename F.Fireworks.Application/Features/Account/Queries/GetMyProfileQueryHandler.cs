@@ -48,6 +48,7 @@ public class GetMyProfileQueryHandler(
                 DisplayName = p.DisplayName,
                 Path = p.Path,
                 Icon = p.Icon,
+                Code = p.Code,
                 SortOrder = p.SortOrder
             })
             .ToListAsync(cancellationToken);

@@ -8,6 +8,7 @@ public class MenuNodeDto : ITreeNode<MenuNodeDto, Guid>
     public string? DisplayName { get; set; }
     public string? Path { get; set; }
     public string? Icon { get; set; }
+    public string Code { get; init; } = string.Empty;
     public int SortOrder { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -15,5 +16,5 @@ public class MenuNodeDto : ITreeNode<MenuNodeDto, Guid>
 
     public Guid Id { get; set; }
 
-     public Guid? ParentId { get; set; }
+    public Guid? ParentId { get; set; }
 }
