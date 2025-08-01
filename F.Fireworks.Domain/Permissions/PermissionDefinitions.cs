@@ -135,18 +135,18 @@ public static class PermissionDefinitions
     [Permission("删除课节", PermissionType.Button, 4, true, parentCode: LibraryTopics)]
     public const string LibraryLessonsDelete = "Library.Lessons.Delete";
 
-    [Permission("套餐管理", PermissionType.Menu, 6, true, "/admin/plans", System)]
+    [Permission("套餐管理", PermissionType.Menu, 6, false, "/admin/plans", System)]
     public const string Plans = "System.Plans";
 
-    [Permission("查看套餐", PermissionType.Button, 1, true, parentCode: Plans)]
+    [Permission("查看套餐", PermissionType.Button, 1, false, parentCode: Plans)]
     public const string PlansRead = "System.Plans.Read";
 
-    [Permission("创建套餐", PermissionType.Button, 2, true, parentCode: Plans)]
+    [Permission("创建套餐", PermissionType.Button, 2, false, parentCode: Plans)]
     public const string PlansCreate = "System.Plans.Create";
 
-    [Permission("编辑套餐", PermissionType.Button, 3, true, parentCode: Plans)]
+    [Permission("编辑套餐", PermissionType.Button, 3, false, parentCode: Plans)]
     public const string PlansUpdate = "System.Plans.Update";
 
-    [Permission("删除套餐", PermissionType.Button, 4, true, parentCode: Plans)]
+    [Permission("删除套餐", PermissionType.Button, 4, false, parentCode: Plans)]
     public const string PlansDelete = "System.Plans.Delete";
 }

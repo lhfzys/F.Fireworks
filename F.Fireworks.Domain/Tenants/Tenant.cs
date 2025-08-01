@@ -5,7 +5,7 @@ using F.Fireworks.Shared.Enums;
 
 namespace F.Fireworks.Domain.Tenants;
 
-public class Tenant : IEntity<Guid>, IAuditable
+public class Tenant : IEntity<Guid>, IAuditable, ISoftDeletable
 {
     public string Name { get; set; } = null!;
     public TenantType Type { get; set; }
@@ -27,4 +27,10 @@ public class Tenant : IEntity<Guid>, IAuditable
     public Guid? LastModifiedBy { get; set; }
     public DateTime? LastModifiedOn { get; set; }
     public Guid Id { get; set; }
+
+
+    // --- 软删除字段 ---
+    public Guid? DeletedBy { get; set; }
+    public DateTime? DeletedOn { get; set; }
+    public bool IsDeleted { get; set; }
 }

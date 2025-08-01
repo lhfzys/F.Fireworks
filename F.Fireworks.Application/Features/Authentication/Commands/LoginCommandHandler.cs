@@ -31,7 +31,8 @@ public class LoginCommandHandler(
         // 1. 根据租户标识查找租户
         var tenant = await context.Tenants
             .AsNoTracking()
-            .FirstOrDefaultAsync(t => t.Name == request.TenantIdentifier, cancellationToken);
+            .FirstOrDefaultAsync(t => t.Name == request.TenantIdentifier && t.IsActive && !t.IsDeleted,
+                cancellationToken);
         if (tenant is null) return Result<LoginResponse>.Unauthorized("无效的机构、用户名或密码");
 
         // 2. 在指定租户下，通过用户名或邮箱查找用户
@@ -81,8 +82,8 @@ public class LoginCommandHandler(
 
         if (user.MustChangePassword)
         {
-            
         }
+
         // 6. 生成 Access Token
         var roles = await userManager.GetRolesAsync(user);
         var accessToken = tokenService.CreateToken(user, roles);

@@ -5,7 +5,7 @@ using MediatR;
 
 namespace F.Fireworks.Api.Features.Authentication;
 
-public class LogoutEndpoint(IMediator mediator) : Endpoint<LogoutCommand>
+public class LogoutEndpoint(IMediator mediator) : EndpointWithoutRequest
 {
     public override void Configure()
     {
@@ -15,9 +15,10 @@ public class LogoutEndpoint(IMediator mediator) : Endpoint<LogoutCommand>
         Summary(s => s.Summary = "用户登出");
     }
 
-    public override async Task HandleAsync(LogoutCommand req, CancellationToken ct)
+    public override async Task HandleAsync(CancellationToken ct)
     {
-        var result = await mediator.Send(req, ct);
+        var command = new LogoutCommand();
+        var result = await mediator.Send(command, ct);
         await this.SendMyResultAsync(result, ct);
     }
 }
