@@ -13,8 +13,8 @@ public class CreateRoleCommandValidator : AbstractValidator<CreateRoleCommand>
             .MaximumLength(100);
 
         // 验证角色名是否唯一
-        RuleFor(x => x.Name)
-            .MustAsync(async (name, ct) => !await roleManager.RoleExistsAsync(name))
-            .WithMessage("Role with name '{PropertyValue}' already exists.");
+        // RuleFor(x => x.Name)
+        //     .MustAsync(async (name, ct) => !await roleManager.RoleExistsAsync(name))
+        //     .WithMessage("Role with name '{PropertyValue}' already exists.");
     }
 }

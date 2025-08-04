@@ -1,25 +1,37 @@
 ﻿using Ardalis.Result;
+using F.Fireworks.Application.Common.Extensions;
+using F.Fireworks.Application.Contracts.Persistence;
 using F.Fireworks.Application.Contracts.Services;
+using F.Fireworks.Application.DTOs.Common;
 using F.Fireworks.Application.DTOs.Roles;
-using F.Fireworks.Domain.Identity;
+using F.Fireworks.Domain.Constants;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace F.Fireworks.Application.Features.Roles.Queries;
 
-public class GetAllRolesQueryHandler(ICurrentUserService currentUser, RoleManager<ApplicationRole> roleManager)
-    : IRequestHandler<GetAllRolesQuery, Result<List<RoleDto>>>
+public class GetAllRolesQueryHandler(ICurrentUserService currentUser, IApplicationDbContext context)
+    : IRequestHandler<GetAllRolesQuery, Result<PaginatedList<RoleDto>>>
 {
-    public async Task<Result<List<RoleDto>>> Handle(GetAllRolesQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PaginatedList<RoleDto>>> Handle(GetAllRolesQuery request,
+        CancellationToken cancellationToken)
     {
-        var query = roleManager.Roles.AsNoTracking();
-        if (!currentUser.IsInRole("SuperAdmin")) query = query.Where(r => r.TenantId == currentUser.TenantId);
-        var roles = await query.OrderBy(r => r.Name).ToListAsync(cancellationToken);
+        var query = context.Roles.Include(r => r.Tenant).AsNoTracking();
+        if (!currentUser.IsInRole(RoleConstants.SuperAdmin))
+            query = query.Where(r => r.TenantId == currentUser.TenantId);
 
-        var roleDtos = roles
-            .Select(r => new RoleDto(r.Id, r.Name!, r.Description, r.CreatedOn))
-            .ToList();
-        return Result<List<RoleDto>>.Success(roleDtos);
+        var paginatedResult = await query
+            .ApplyFiltering(request.Filter)
+            .ApplySort(request.Filter.SortField, request.Filter.SortOrder)
+            .Select(r => new RoleDto(
+                r.Id,
+                r.Name,
+                r.Description,
+                r.CreatedOn,
+                r.TenantId,
+                r.Tenant.Name
+            ))
+            .ToPaginatedListAsync(request.Filter.PageNumber, request.Filter.PageSize, cancellationToken);
+        return Result<PaginatedList<RoleDto>>.Success(paginatedResult);
     }
 }

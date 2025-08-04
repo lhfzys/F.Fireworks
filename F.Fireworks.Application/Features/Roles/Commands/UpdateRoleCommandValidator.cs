@@ -10,13 +10,13 @@ public class UpdateRoleCommandValidator : AbstractValidator<UpdateRoleCommand>
     {
         RuleFor(x => x.Name).NotEmpty().MaximumLength(100);
 
-        RuleFor(x => x)
-            .MustAsync(async (command, ct) =>
-            {
-                var existingRole = await roleManager.FindByNameAsync(command.Name);
-                return existingRole == null || existingRole.Id == command.Id;
-            })
-            .WithMessage("角色名 '{PropertyValue}' 已存在")
-            .WithName("Name");
+        // RuleFor(x => x)
+        //     .MustAsync(async (command, ct) =>
+        //     {
+        //         var existingRole = await roleManager.FindByNameAsync(command.Name);
+        //         return existingRole == null || existingRole.Id == command.Id;
+        //     })
+        //     .WithMessage("角色名 '{PropertyValue}' 已存在")
+        //     .WithName("Name");
     }
 }

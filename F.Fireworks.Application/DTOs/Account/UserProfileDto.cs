@@ -6,6 +6,7 @@ public record UserProfileDto
 {
     public Guid Id { get; init; }
     public string? UserName { get; init; }
+    public string? Email { get; init; }
     public UserStatus Status { get; init; }
 
     public TenantInfo? Tenant { get; init; }

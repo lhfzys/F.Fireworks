@@ -57,6 +57,7 @@ public class GetMyProfileQueryHandler(
         {
             Id = user.Id,
             UserName = user.UserName,
+            Email = user.Email,
             Status = user.Status,
 
             Tenant = new TenantInfo(user.Tenant.Id, user.Tenant.Name),

@@ -1,3 +1,18 @@
 ﻿namespace F.Fireworks.Application.DTOs.Roles;
 
-public record RoleDto(Guid Id, string Name, string? Description, DateTime CreatedOn);
+public record RoleDto(
+    Guid Id,
+    string? Name,
+    string? Description,
+    DateTime CreatedOn,
+    Guid TenantId,
+    string? TenantName);
+
+public record RoleDetailsDto(
+    Guid Id,
+    string? Name,
+    string? Description,
+    DateTime CreatedOn,
+    Guid TenantId,
+    string? TenantName,
+    List<Guid> PermissionIds);

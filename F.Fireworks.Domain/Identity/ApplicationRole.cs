@@ -1,5 +1,6 @@
 using F.Fireworks.Domain.Common;
 using F.Fireworks.Domain.Permissions;
+using F.Fireworks.Domain.Tenants;
 using Microsoft.AspNetCore.Identity;
 
 namespace F.Fireworks.Domain.Identity;
@@ -8,6 +9,7 @@ public class ApplicationRole : IdentityRole<Guid>, IAuditable
 {
     // --- 导航属性 ---
     public ICollection<ApplicationRolePermission> Permissions = new List<ApplicationRolePermission>();
+    public virtual Tenant Tenant { get; set; } = null!;
     public string? Description { get; set; }
 
     /// <summary>

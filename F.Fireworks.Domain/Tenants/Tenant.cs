@@ -20,6 +20,7 @@ public class Tenant : IEntity<Guid>, IAuditable, ISoftDeletable
     public virtual Plan? Plan { get; set; }
 
     public virtual ICollection<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
+    public virtual ICollection<ApplicationRole> Roles { get; set; } = new List<ApplicationRole>();
 
     // --- 审计字段 ---
     public Guid? CreatedBy { get; set; }
