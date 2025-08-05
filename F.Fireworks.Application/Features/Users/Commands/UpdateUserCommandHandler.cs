@@ -18,10 +18,23 @@ public class UpdateUserCommandHandler(UserManager<ApplicationUser> userManager, 
         if (!currentUser.IsInRole("SuperAdmin") && user.TenantId != currentUser.TenantId)
             return Result.NotFound("用户不存在或已被删除");
         user.Status = request.Status;
-        var result = await userManager.UpdateAsync(user);
 
-        return result.Succeeded
+        var userNameResult = await userManager.SetUserNameAsync(user, request.UserName);
+        if (!userNameResult.Succeeded)
+            return Result.Invalid(
+                userNameResult.Errors.Select(e => new ValidationError(e.Code, e.Description)).ToList());
+        if (user.Email != request.Email)
+        {
+            var emailResult = await userManager.SetEmailAsync(user, request.Email);
+            if (!emailResult.Succeeded)
+                return Result.Invalid(emailResult.Errors.Select(e => new ValidationError(e.Code, e.Description))
+                    .ToList());
+        }
+
+        var updateResult = await userManager.UpdateAsync(user);
+
+        return updateResult.Succeeded
             ? Result.Success()
-            : Result.Invalid(result.Errors.Select(e => new ValidationError(e.Code, e.Description)).ToList());
+            : Result.Invalid(updateResult.Errors.Select(e => new ValidationError(e.Code, e.Description)).ToList());
     }
 }

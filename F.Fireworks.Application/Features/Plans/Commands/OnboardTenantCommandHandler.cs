@@ -1,5 +1,6 @@
 using Ardalis.Result;
 using F.Fireworks.Application.Contracts.Persistence;
+using F.Fireworks.Domain.Constants;
 using F.Fireworks.Domain.Identity;
 using F.Fireworks.Domain.Permissions;
 using F.Fireworks.Domain.Tenants;
@@ -44,7 +45,10 @@ public class OnboardTenantCommandHandler(
 
             // 2. 为新租户创建默认的“Admin”角色
             var adminRole = new ApplicationRole
-                { Name = "Admin", Description = "Administrator role for the tenant", TenantId = tenant.Id };
+            {
+                Name = RoleConstants.TenantAdmin, Description = "Administrator role for the tenant",
+                TenantId = tenant.Id, IsProtected = true
+            };
             var roleResult = await roleManager.CreateAsync(adminRole);
             if (!roleResult.Succeeded)
             {

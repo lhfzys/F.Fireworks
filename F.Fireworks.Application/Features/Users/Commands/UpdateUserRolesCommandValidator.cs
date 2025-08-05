@@ -14,14 +14,14 @@ public class UpdateUserRolesCommandValidator : AbstractValidator<UpdateUserRoles
             .MustAsync(async (id, ct) => await userManager.FindByIdAsync(id.ToString()) is not null)
             .WithMessage("User not found.");
 
-        RuleFor(x => x.RoleNames)
-            .NotNull()
-            .MustAsync(async (roleNames, ct) =>
-            {
-                foreach (var roleName in roleNames)
-                    if (!await roleManager.RoleExistsAsync(roleName))
-                        return false;
-                return true;
-            }).WithMessage("One or more roles do not exist.");
+        // RuleFor(x => x.RoleNames)
+        //     .NotNull()
+        //     .MustAsync(async (roleNames, ct) =>
+        //     {
+        //         foreach (var roleName in roleNames)
+        //             if (!await roleManager.RoleExistsAsync(roleName))
+        //                 return false;
+        //         return true;
+        //     }).WithMessage("One or more roles do not exist.");
     }
 }

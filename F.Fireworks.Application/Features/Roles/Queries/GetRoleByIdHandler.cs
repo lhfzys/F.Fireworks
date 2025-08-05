@@ -25,7 +25,8 @@ public class GetRoleByIdHandler(IApplicationDbContext context, ICurrentUserServi
                 role.CreatedOn,
                 role.TenantId,
                 role.Tenant.Name,
-                role.Permissions.Select(rp => rp.PermissionId).ToList()
+                role.Permissions.Select(rp => rp.PermissionId).ToList(),
+                role.IsProtected
             ))
             .FirstOrDefaultAsync(cancellationToken);
 

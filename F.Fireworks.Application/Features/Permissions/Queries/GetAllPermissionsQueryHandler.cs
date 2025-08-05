@@ -2,6 +2,7 @@
 using F.Fireworks.Application.Contracts.Persistence;
 using F.Fireworks.Application.Contracts.Services;
 using F.Fireworks.Application.DTOs.Permissions;
+using F.Fireworks.Domain.Constants;
 using F.Fireworks.Domain.Permissions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -15,19 +16,19 @@ public class GetAllPermissionsQueryHandler(IApplicationDbContext context, ICurre
         CancellationToken cancellationToken)
     {
         var query = context.Permissions.AsNoTracking();
-        if (!currentUser.IsInRole("SuperAdmin"))
+        if (!currentUser.IsInRole(RoleConstants.SuperAdmin))
         {
             var tenantId = currentUser.TenantId;
             if (tenantId is null) return Result<List<PermissionNodeDto>>.Success([]);
             // 1. 找到当前租户所订阅的套餐ID
             var planId = await context.Tenants
-                .Where(t => t.Id == tenantId)
+                .Where(t => t.Id == tenantId.Value)
                 .Select(t => t.PlanId)
                 .FirstOrDefaultAsync(cancellationToken);
             if (planId is null) return Result<List<PermissionNodeDto>>.Success([]);
             // 2. 根据套餐ID，找出该套餐包含的所有权限ID
             var permissionIdsInPlan = await context.PlanPermissions
-                .Where(pp => pp.PlanId == planId)
+                .Where(pp => pp.PlanId == planId.Value)
                 .Select(pp => pp.PermissionId)
                 .ToListAsync(cancellationToken);
             // 3. 将主查询限定在这些权限ID内
@@ -35,8 +36,7 @@ public class GetAllPermissionsQueryHandler(IApplicationDbContext context, ICurre
         }
 
         // 1. 从数据库一次性查询出所有权限，并按 SortOrder 排序
-        var allPermissions = await context.Permissions
-            .AsNoTracking() // 只读查询，提升性能
+        var allPermissions = await query
             .OrderBy(p => p.SortOrder)
             .ToListAsync(cancellationToken);
 

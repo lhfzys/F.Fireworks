@@ -24,6 +24,7 @@ public class DeleteRoleCommandHandler(
                 return Result.Error("当前角色已被使用，无法删除");
         }
 
+        if (role.IsProtected) return Result.Forbidden("默认角色禁止变更");
         var result = await roleManager.DeleteAsync(role);
         return !result.Succeeded
             ? Result.Invalid(result.Errors.Select(e => new ValidationError(e.Code, e.Description)).ToList())

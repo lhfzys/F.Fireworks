@@ -1,6 +1,7 @@
 ﻿using Ardalis.Result;
 using F.Fireworks.Application.Contracts.Persistence;
 using F.Fireworks.Application.Contracts.Services;
+using F.Fireworks.Domain.Constants;
 using F.Fireworks.Domain.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -20,50 +21,42 @@ public class UpdateUserRolesCommandHandler(
         if (user is null) return Result.NotFound("用户不存在或已被删除");
         if (!currentUser.IsInRole("SuperAdmin") && user.TenantId != currentUser.TenantId)
             return Result.Forbidden("用户不存在或已被删除");
-        if (!currentUser.IsInRole("SuperAdmin"))
+
+        var targetTenantId =
+            currentUser.IsInRole(RoleConstants.SuperAdmin) ? user.TenantId : currentUser.TenantId!.Value;
+
+        var validRolesInTenantCount = await context.Roles
+            .CountAsync(r => r.TenantId == targetTenantId && request.RoleIds.Contains(r.Id), cancellationToken);
+        if (validRolesInTenantCount != request.RoleIds.Count)
+            return Result.Invalid(new ValidationError("RoleIds", "一个或多个角色不存在，或不属于目标租户。"));
+
+
+        // 1. 找出用户当前拥有的角色
+        var currentUserRoles =
+            await context.UserRoles.Where(ur => ur.UserId == request.UserId).ToListAsync(cancellationToken);
+        var currentRoleIds = currentUserRoles.Select(ur => ur.RoleId);
+
+        // 2. 计算需要移除的角色
+        var rolesToRemove = currentUserRoles.Where(ur => !request.RoleIds.Contains(ur.RoleId)).ToList();
+
+        // 3. 计算需要新增的角色ID
+        var roleIdsToAdd = request.RoleIds.Except(currentRoleIds).ToList();
+
+        // 4. 执行数据库操作
+        if (rolesToRemove.Any()) context.UserRoles.RemoveRange(rolesToRemove);
+
+        if (roleIdsToAdd.Any())
         {
-            var tenantId = currentUser.TenantId;
-            var rolesInTenantCount = await context.Roles
-                .CountAsync(r => r.TenantId == tenantId && request.RoleNames.Contains(r.Name), cancellationToken);
-
-            if (rolesInTenantCount != request.RoleNames.Count)
-                return Result.Invalid(new ValidationError
-                {
-                    Identifier = "RoleNames",
-                    ErrorMessage = "有角色不属于该租户"
-                });
-        }
-
-        // 获取用户当前的角色
-        var currentRoles = await userManager.GetRolesAsync(user);
-
-        // 计算需要添加的角色 (新角色列表有，但当前角色列表没有)
-        var rolesToAdd = request.RoleNames.Except(currentRoles).ToList();
-        if (rolesToAdd.Count != 0)
-        {
-            var addResult = await userManager.AddToRolesAsync(user, rolesToAdd);
-            if (!addResult.Succeeded)
+            var newUserRoles = roleIdsToAdd.Select(roleId => new IdentityUserRole<Guid>
             {
-                var errors = addResult.Errors
-                    .Select(e => new ValidationError { Identifier = e.Code, ErrorMessage = e.Description })
-                    .ToList();
-                return Result.Invalid(errors);
-            }
+                UserId = request.UserId,
+                RoleId = roleId
+            });
+            await context.UserRoles.AddRangeAsync(newUserRoles, cancellationToken);
         }
 
-        var rolesToRemove = currentRoles.Except(request.RoleNames).ToList();
-        if (rolesToRemove.Any())
-        {
-            var removeResult = await userManager.RemoveFromRolesAsync(user, rolesToRemove);
-            if (!removeResult.Succeeded)
-            {
-                var errors = removeResult.Errors
-                    .Select(e => new ValidationError { Identifier = e.Code, ErrorMessage = e.Description })
-                    .ToList();
-                return Result.Invalid(errors);
-            }
-        }
+        await context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        return Result.SuccessWithMessage("用户角色已成功更新。");
     }
 }

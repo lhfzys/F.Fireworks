@@ -29,7 +29,8 @@ public class GetAllRolesQueryHandler(ICurrentUserService currentUser, IApplicati
                 r.Description,
                 r.CreatedOn,
                 r.TenantId,
-                r.Tenant.Name
+                r.Tenant.Name,
+                r.IsProtected
             ))
             .ToPaginatedListAsync(request.Filter.PageNumber, request.Filter.PageSize, cancellationToken);
         return Result<PaginatedList<RoleDto>>.Success(paginatedResult);

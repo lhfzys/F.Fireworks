@@ -3,4 +3,4 @@ using MediatR;
 
 namespace F.Fireworks.Application.Features.Users.Commands;
 
-public record UpdateUserRolesCommand(Guid UserId, List<string> RoleNames) : IRequest<Result>;
+public record UpdateUserRolesCommand(Guid UserId, List<Guid> RoleIds) : IRequest<Result>;

@@ -19,7 +19,8 @@ public class UpdateRolePermissionsEndpoint(IMediator mediator) : Endpoint<Update
         Summary(s => s.Summary = "更新指定角色的权限");
     }
 
-    public override async Task HandleAsync(UpdateRolePermissionsCommand req, CancellationToken ct)
+    public override async Task HandleAsync(UpdateRolePermissionsCommand req,
+        CancellationToken ct)
     {
         var result = await mediator.Send(req, ct);
         await this.SendMyResultAsync(result, ct);

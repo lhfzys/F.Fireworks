@@ -11,6 +11,7 @@ public class ApplicationRole : IdentityRole<Guid>, IAuditable
     public ICollection<ApplicationRolePermission> Permissions = new List<ApplicationRolePermission>();
     public virtual Tenant Tenant { get; set; } = null!;
     public string? Description { get; set; }
+    public bool IsProtected { get; set; }
 
     /// <summary>
     ///     角色所属的租户ID

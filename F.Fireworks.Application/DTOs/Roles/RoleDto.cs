@@ -6,7 +6,8 @@ public record RoleDto(
     string? Description,
     DateTime CreatedOn,
     Guid TenantId,
-    string? TenantName);
+    string? TenantName,
+    bool IsProtected);
 
 public record RoleDetailsDto(
     Guid Id,
@@ -15,4 +16,5 @@ public record RoleDetailsDto(
     DateTime CreatedOn,
     Guid TenantId,
     string? TenantName,
-    List<Guid> PermissionIds);
+    List<Guid> PermissionIds,
+    bool IsProtected);

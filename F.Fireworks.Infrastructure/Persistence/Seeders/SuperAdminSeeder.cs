@@ -48,7 +48,7 @@ public class SuperAdminSeeder(
             adminRole = new ApplicationRole
             {
                 Name = adminRoleName, Description = "Super administrator with all permissions.",
-                TenantId = systemTenant.Id
+                TenantId = systemTenant.Id, IsProtected = true
             };
             await roleManager.CreateAsync(adminRole);
         }
