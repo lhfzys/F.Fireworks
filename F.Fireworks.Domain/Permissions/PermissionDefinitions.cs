@@ -152,4 +152,8 @@ public static class PermissionDefinitions
 
     [Permission("删除套餐", PermissionType.Button, 4, false, parentCode: Plans)]
     public const string PlansDelete = "System.Plans.Delete";
+
+    [Permission("审计日志", PermissionType.Menu, 10, path: "/admin/audit-logs", parentCode: System,
+        isTenantPermission: true)]
+    public const string AuditLogsRead = "System.AuditLogs.Read";
 }

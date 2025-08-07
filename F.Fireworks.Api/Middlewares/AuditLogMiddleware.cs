@@ -3,6 +3,7 @@ using System.Text;
 using F.Fireworks.Application.Contracts.Persistence;
 using F.Fireworks.Application.Contracts.Services;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace F.Fireworks.Api.Middlewares;
 
@@ -32,10 +33,17 @@ public class AuditLogMiddleware(RequestDelegate next)
 
         var responseBodyContent = await GetResponsePayloadAsync(context.Response);
         await responseBody.CopyToAsync(originalBodyStream);
+        string? tenantName = null;
+        if (currentUser.TenantId.HasValue)
+            tenantName = await dbContext.Tenants
+                .Where(t => t.Id == currentUser.TenantId.Value)
+                .Select(t => t.Name)
+                .FirstOrDefaultAsync();
         var auditInfo = new AuditInfo(
             currentUser.UserId,
             context.User.Identity?.Name,
             currentUser.TenantId ?? Guid.Empty,
+            tenantName,
             context.Request.Path,
             context.Request.GetDisplayUrl(),
             context.Request.Method,

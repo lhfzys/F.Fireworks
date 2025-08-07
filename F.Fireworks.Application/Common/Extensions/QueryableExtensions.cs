@@ -24,9 +24,11 @@ public static class QueryableExtensions
         foreach (var prop in filterProperties)
         {
             // 忽略分页和排序属性
-            if (prop.Name is nameof(FilterBase.PageNumber) or nameof(FilterBase.PageSize)
-                or nameof(FilterBase.SortField) or nameof(FilterBase.SortOrder))
+            if (prop.Name is nameof(PagedAndSortedRequest.PageNumber) or nameof(PagedAndSortedRequest.PageSize) or
+                nameof(PagedAndSortedRequest.SortField) or nameof(PagedAndSortedRequest.SortOrder) or
+                "DateFrom" or "DateTo")
                 continue;
+
 
             if (predicate.Length > 0)
                 predicate.Append(" AND ");

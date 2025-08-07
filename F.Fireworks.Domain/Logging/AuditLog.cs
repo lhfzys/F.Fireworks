@@ -7,6 +7,7 @@ public class AuditLog : IEntity<Guid>
     public Guid? UserId { get; set; }
     public string? UserName { get; set; }
     public Guid TenantId { get; set; }
+    public string? TenantName { get; set; }
     public string HttpMethod { get; set; } = string.Empty;
     public string Url { get; set; } = string.Empty;
     public string RequestName { get; set; } = string.Empty;

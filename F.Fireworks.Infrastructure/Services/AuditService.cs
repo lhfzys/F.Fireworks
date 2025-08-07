@@ -31,6 +31,7 @@ public class AuditService(IApplicationDbContext context, IBackgroundJobClient ba
             UserId = auditInfo.UserId,
             UserName = auditInfo.UserName,
             TenantId = auditInfo.TenantId,
+            TenantName = auditInfo.TenantName,
             RequestName = auditInfo.RequestName,
             Url = auditInfo.RequestUrl,
             HttpMethod = auditInfo.HttpMethod,

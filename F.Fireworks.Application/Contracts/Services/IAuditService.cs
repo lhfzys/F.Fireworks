@@ -4,6 +4,7 @@ public record AuditInfo(
     Guid? UserId,
     string? UserName,
     Guid TenantId,
+    string? TenantName,
     string RequestName,
     string RequestUrl,
     string HttpMethod,
