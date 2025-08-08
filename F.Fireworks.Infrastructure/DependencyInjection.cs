@@ -67,6 +67,7 @@ public static class DependencyInjection
         services.AddScoped<IAuditService, AuditService>();
         services.AddScoped<IDataSanitizer, DataSanitizer>();
         services.AddScoped<SuperAdminSeeder>();
+        services.AddScoped<IAuditLogMaintenanceService, AuditLogMaintenanceService>();
 
         services.AddHangfire(config => config
             .UsePostgreSqlStorage(c =>

@@ -2,7 +2,9 @@ using F.Fireworks.Api.Extensions;
 using F.Fireworks.Api.Middlewares;
 using F.Fireworks.Application;
 using F.Fireworks.Infrastructure;
+using F.Fireworks.Infrastructure.BackgroundJobs;
 using FastEndpoints;
+using Hangfire;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
@@ -38,4 +40,11 @@ app.MapHealthChecks("/healthz", new HealthCheckOptions
 });
 app.MapHealthChecksUI(options => { options.UIPath = "/health-ui"; });
 await app.SeedDataAsync();
+
+app.UseHangfireDashboard();
+RecurringJob.AddOrUpdate<AuditLogCleanupJob>(
+    "AuditLogCleanup",
+    job => job.Run(),
+    Cron.Daily());
+
 app.Run();
