@@ -21,8 +21,15 @@ public class GetAuditLogsQueryHandler(IApplicationDbContext context, ICurrentUse
         var query = context.AuditLogs.AsNoTracking();
 
         // --- 1. 租户隔离逻辑 ---
-        if (!currentUser.IsInRole(RoleConstants.SuperAdmin))
+        if (currentUser.IsInRole(RoleConstants.SuperAdmin))
+        {
+            if (request.Filter.TenantId.HasValue && request.Filter.TenantId.Value != Guid.Empty)
+                query = query.Where(a => a.TenantId == request.Filter.TenantId.Value);
+        }
+        else
+        {
             query = query.Where(a => a.TenantId == currentUser.TenantId);
+        }
 
         // --- 2. 手动处理通用筛选器（如日期范围） ---
         if (request.Filter.DateFrom.HasValue)
