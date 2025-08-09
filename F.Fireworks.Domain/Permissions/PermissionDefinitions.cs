@@ -57,7 +57,7 @@ public static class PermissionDefinitions
     public const string RolesDelete = "System.Roles.Delete";
 
     // 权限管理
-    [Permission("权限管理", PermissionType.Menu, 3, false, "/system/permissions", System)]
+    // [Permission("权限管理", PermissionType.Menu, 3, false, "/system/permissions", System)]
     public const string Permissions = "System.Permissions";
 
     [Permission("查看权限", PermissionType.Button, 1, true, parentCode: Permissions)]
@@ -82,7 +82,7 @@ public static class PermissionDefinitions
     [Permission("清空租户", PermissionType.Button, 5, false, parentCode: Tenants)]
     public const string TenantsPurge = "System.Tenants.Purge";
 
-    [Permission("会话管理", PermissionType.Menu, 5, false, "/system/sessions", System)]
+    // [Permission("会话管理", PermissionType.Menu, 5, false, "/system/sessions", System)]
     public const string Sessions = "System.Sessions";
 
     [Permission("查看会话", PermissionType.Button, 1, false, parentCode: Sessions)]
